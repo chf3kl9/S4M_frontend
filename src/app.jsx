@@ -6,6 +6,7 @@ import MovieScreen from "./components/views/MovieScreen";
 import Dashboard from "./components/views/Dashboard";
 import withStyles from "@material-ui/core/styles/withStyles";
 import withRoot from "./withRoot.jsx";
+import MovieDetailScreen from "./components/views/MovieDetailScreen";
 
 const styles = () => ({
     root: { display: 'flex' },
@@ -20,6 +21,7 @@ const App = ({classes}) => {
 
                     <Route path="/main" component={MainScreen} />
                     <Route path="/movies" component={MovieScreen}/>
+                    <Route path="/movie" component={MovieDetailScreen}/>
 
                     {/*<Route path="/login" component={Login} />
                     <Route path="/logout" component={Logout} /> */}

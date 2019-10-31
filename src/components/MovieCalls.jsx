@@ -1,16 +1,16 @@
 import axios from "axios";
 
 class MovieCalls {
-    endpoint = "localhost:8094";
+    endpoint = "http://localhost:8094";
 
     getAllMovies(screen) {
         let call = "/movies";
         axios
             .get(this.endpoint + call)
             .then( response => {
-                screen.setState({movies: response.data});
                 console.log("Yay, success!");
                 console.log(response.data);
+                screen.setState({movies: response.data});
             })
             .catch(error => {console.log(error); console.log(error.response)});
     }
@@ -20,9 +20,7 @@ class MovieCalls {
         axios
             .get(this.endpoint + call)
             .then( response => {
-                screen.setState({movie: response.data});
-                console.log("Yay, success!");
-                console.log(response.data);
+                screen.setState({movie: response.data}, () => screen.movieReturned());
             })
             .catch(error => {console.log(error); console.log(error.response)});
     }
