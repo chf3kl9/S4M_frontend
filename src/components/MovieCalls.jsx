@@ -1,7 +1,9 @@
 import axios from "axios";
 
 class MovieCalls {
-    endpoint = "http://localhost:8094";
+
+    //endpoint = "http://localhost:8094";
+    endpoint = "https://s4m-backend.herokuapp.com";
 
     getAllMovies(screen) {
         let call = "/movies";
