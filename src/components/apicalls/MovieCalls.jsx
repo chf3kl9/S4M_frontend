@@ -32,8 +32,9 @@ class MovieCalls {
         axios
             .post(this.endpoint + call, movie)
             .then(response => {
-                //todo transition to all movies
-                console.log("Yay, success!");
+                screen.props.history.push({
+                    pathname: "/movies"
+                });
             })
             .catch(error => {console.log(error); console.log(error.response)});
     }
@@ -43,8 +44,9 @@ class MovieCalls {
         axios
             .put(this.endpoint + call, movie)
             .then(response => {
-                //todo transition to all movies
-                console.log("Yay, success!");
+                screen.props.history.push({
+                    pathname: "/movies"
+                });
             })
             .catch(error => {console.log(error); console.log(error.response)});
     }
