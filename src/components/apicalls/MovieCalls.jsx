@@ -2,8 +2,8 @@ import axios from "axios";
 
 class MovieCalls {
 
-    //endpoint = "http://localhost:8094";
-    endpoint = "https://s4m-backend.herokuapp.com";
+    endpoint = "http://localhost:8080";
+    //endpoint = "https://s4m-backend.herokuapp.com";
 
     getAllMovies(screen) {
         let call = "/movies";
@@ -54,8 +54,9 @@ class MovieCalls {
         axios
             .delete(this.endpoint + call)
             .then(response => {
-                //todo transition to all movies
-                console.log("Yay, success!");
+                screen.props.history.push({
+                    pathname: "/movies"
+                });
             })
             .catch(error => {console.log(error); console.log(error.response)});
     }

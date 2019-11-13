@@ -1,7 +1,8 @@
 import React, {Component} from "react";
 import {withRouter} from "react-router-dom";
 import withStyles from "@material-ui/core/styles/withStyles";
-import MovieCalls from "../MovieCalls";
+import MovieCalls from "../../apicalls/MovieCalls";
+import Button from "@material-ui/core/Button";
 
 const styles = theme => ({ //todo move to other file and import
 });
@@ -14,6 +15,10 @@ class MovieDetailScreen extends Component {
         const {movieId} = this.props.location;
         if (movieId !== undefined)
             this.movieCalls.getMovieById(this, movieId);
+        else
+            this.props.history.push({
+                pathname: "/editMovie"
+            })
     }
 
     movieCalls = new MovieCalls();
@@ -22,15 +27,23 @@ class MovieDetailScreen extends Component {
         movie: {id: -1, title: "", description: "", link: ""},
     };
 
-    handleChange = event => {
-        this.setState({[event.target.name]: event.target.value});
-    };
-
     movieReturned() {
         if (this.state.movie === null) {
+            //todo tell user that something went wrong, as the selected movie was not found
             this.props.history.push({
                 pathname: "/movies"
             });
+        }
+    }
+
+    editMovie() {
+        if (this.state.movie.id > 0) {
+            this.props.history.push({
+                pathname: "/editMovie",
+                movieId: this.state.movie.id
+            })
+        } else {
+            //todo tell user to wait a bit so that the movie can load
         }
     }
 
@@ -38,13 +51,17 @@ class MovieDetailScreen extends Component {
         const {classes} = this.props;
         return (
             <div>
-                Id: {this.state.movie.id}
-                <br/><br/>
                 Title: {this.state.movie.title}
                 <br/><br/>
                 Description: {this.state.movie.description}
                 <br/><br/>
                 Link: {this.state.movie.link}
+                <br/><br/>
+                <Button variant="contained" className={classes.button}
+                    onClick={() => this.editMovie()}>
+                    Edit
+                </Button>
+
             </div>
         );
     }

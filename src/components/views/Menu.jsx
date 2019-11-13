@@ -22,7 +22,6 @@ const ListItemLink = ({primary, icon, to}) => {
 
 export const mainMenuItems = (
     <>
-        <ListSubheader inset>aaaaaaaa</ListSubheader>
         <ListItemLink to="/main"
                       primary="Main Screen"
                       icon={<PublicIcon />} />
@@ -31,9 +30,12 @@ export const mainMenuItems = (
 
 export const secondaryMenuItems = (
     <>
-        <ListSubheader inset>aaaaaaaaaa</ListSubheader>
+        <ListSubheader inset>Movies</ListSubheader>
         <ListItemLink to="/movies"
                       primary="Movies"
+                      icon={<PublicIcon />} />
+        <ListItemLink to="/editMovie"
+                      primary="Create Movie"
                       icon={<PublicIcon />} />
     </>
 );
