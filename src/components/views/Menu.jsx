@@ -37,5 +37,13 @@ export const secondaryMenuItems = (
         <ListItemLink to="/editMovie"
                       primary="Create Movie"
                       icon={<PublicIcon />} />
+
+        <ListSubheader inset>Genres</ListSubheader>
+        <ListItemLink to="/genres"
+                      primary="Genres"
+                      icon={<PublicIcon />} />
+        <ListItemLink to="/editGenre"
+                      primary="Create Genre"
+                      icon={<PublicIcon />} />
     </>
 );

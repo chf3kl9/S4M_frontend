@@ -1,69 +1,68 @@
 import axios from "axios";
 
-class MovieCalls {
+class GenreCalls {
 
     endpoint = "http://localhost:8090";
     //endpoint = "https://s4m-backend.herokuapp.com";
 
-    getAllMovies(screen) {
-        let call = "/movies";
+    getAllGenres(screen) {
+        let call = "/genres";
         axios
             .get(this.endpoint + call)
             .then( response => {
                 console.log("Yay, success!");
                 console.log(response.data);
-                screen.setState({movies: response.data});
+                screen.setState({genres: response.data});
             })
             .catch(error => {console.log(error); console.log(error.response)});
     }
 
-    getMovieById(screen, id) {
-        let call = "/movies/"+id;
+    getGenreById(screen, id) {
+        let call = "/genres/"+id;
         axios
             .get(this.endpoint + call)
             .then( response => {
-                screen.setState({movie: response.data}, () => screen.movieReturned());
+                screen.setState({genre: response.data}, () => screen.genreReturned());
             })
             .catch(error => {console.log(error); console.log(error.response)});
     }
 
-    createMovie(screen, movie) {
-        let call = "/movies";
-        console.log(movie);
+    createGenre(screen, genre) {
+        let call = "/genres";
+        console.log(genre);
         axios
-            .post(this.endpoint + call, movie)
+            .post(this.endpoint + call, genre)
             .then(response => {
                 screen.props.history.push({
-                    pathname: "/movies"
+                    pathname: "/genres"
                 });
             })
             .catch(error => {console.log(error); console.log(error.response)});
     }
 
-    updateMovie(screen, movie) {
-        let call = "/movies";
-        console.log(movie);
+    updateGenre(screen, genre) {
+        let call = "/genres";
         axios
-            .put(this.endpoint + call, movie)
+            .put(this.endpoint + call, genre)
             .then(response => {
                 screen.props.history.push({
-                    pathname: "/movies"
+                    pathname: "/genres"
                 });
             })
             .catch(error => {console.log(error); console.log(error.response)});
     }
 
-    deleteMovieById(screen, id) {
-        let call = "/movies/" + id;
+    deleteGenreById(screen, id) {
+        let call = "/genres/" + id;
         axios
             .delete(this.endpoint + call)
             .then(response => {
                 screen.props.history.push({
-                    pathname: "/movies"
+                    pathname: "/genres"
                 });
             })
             .catch(error => {console.log(error); console.log(error.response)});
     }
 }
 
-export default MovieCalls;
+export default GenreCalls;

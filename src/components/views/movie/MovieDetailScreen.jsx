@@ -24,7 +24,7 @@ class MovieDetailScreen extends Component {
     movieCalls = new MovieCalls();
 
     state = {
-        movie: {id: -1, title: "", description: "", link: ""},
+        movie: {id: -1, title: "", description: "", link: "", genres: []},
     };
 
     movieReturned() {
@@ -57,6 +57,14 @@ class MovieDetailScreen extends Component {
                 <br/><br/>
                 Link: {this.state.movie.link}
                 <br/><br/>
+                Genres:
+                <br/>
+                <ul>
+                {this.state.movie.genres.map(genre => {
+                    return <li>{genre.name}</li>
+                })}
+                </ul>
+
                 <Button variant="contained" className={classes.button}
                     onClick={() => this.editMovie()}>
                     Edit

@@ -16,6 +16,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
 import Input from "@material-ui/core/Input";
+import GenreCalls from "../../apicalls/GenreCalls";
 
 const styles = theme => ({ //todo move to other file and import
 });
@@ -30,7 +31,7 @@ const MenuProps = {
     },
 };
 
-class MovieDetailScreen extends Component {
+class MovieEditScreen extends Component {
 
     constructor(props){
         super(props);
@@ -38,12 +39,14 @@ class MovieDetailScreen extends Component {
         const {movieId} = this.props.location;
         if (movieId !== undefined)
             this.movieCalls.getMovieById(this, movieId);
+        this.genreCalls.getAllGenres(this);
     }
 
+    genreCalls = new GenreCalls();
     movieCalls = new MovieCalls();
 
     state = {
-        movie: {id: -1, title: "", description: "", link: ""},
+        movie: {id: -1, title: "", description: "", link: "", genres: []},
         genres: [],
         open: false,
     };
@@ -60,8 +63,9 @@ class MovieDetailScreen extends Component {
             case "description":
                 tempMovie.description = event.target.value;
                 break;
-            case "tmp":
-                tempMovie.tmp = event.target.value;
+            case "selectedGenres":
+                tempMovie.genres = event.target.value;
+                console.log(event.target.value);
                 break;
             default:
                 this.setState({[event.target.name]: event.target.value});
@@ -175,7 +179,7 @@ class MovieDetailScreen extends Component {
                     >
                         {this.state.genres.map(genre => (
                             <MenuItem key={genre.id} value={genre}>
-                                <Checkbox checked={this.state.movie.genres.indexOf(genre) > -1} />
+                                <Checkbox checked={this.state.movie.genres.map(genre => genre.id).indexOf(genre.id) > -1} />
                                 <ListItemText primary={genre.name} />
                             </MenuItem>
                         ))}
@@ -218,4 +222,4 @@ class MovieDetailScreen extends Component {
     }
 }
 
-export default withRouter(withStyles(styles)(MovieDetailScreen));
+export default withRouter(withStyles(styles)(MovieEditScreen));
