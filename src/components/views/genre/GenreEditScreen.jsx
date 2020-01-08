@@ -136,7 +136,6 @@ class GenreEditScreen extends Component {
     }
 
     deleteGenre() {
-        console.log("deleting genre with id: " + this.state.genre.id);
         this.genreCalls.deleteGenreById(this, this.state.genre.id);
     }
 
@@ -156,10 +155,8 @@ class GenreEditScreen extends Component {
     saveGenre() {
         if (this.state.genre.id < 1) {
             this.genreCalls.createGenre(this, this.state.genre);
-            console.log("creating genre");
         } else if (this.state.genre.id > 0) {
             this.genreCalls.updateGenre(this, this.state.genre);
-            console.log("updating genre");
         }
     }
 }

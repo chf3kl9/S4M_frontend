@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-
+import firebase from "firebase";
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -25,6 +25,14 @@ export const mainMenuItems = (
         <ListItemLink to="/main"
                       primary="Main Screen"
                       icon={<PublicIcon />} />
+        <li onClick={() => firebase.auth().signOut()}>
+            <ListItem button component={Link} to={"/main"}>
+                <ListItemIcon>
+                    {<PublicIcon/>}
+                </ListItemIcon>
+                <ListItemText primary={"Logout"} />
+            </ListItem>
+        </li>
     </>
 );
 

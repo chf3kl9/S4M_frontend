@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Route} from "react-router-dom";
+import {Link, Route} from "react-router-dom";
 
 import AppBar from "@material-ui/core/AppBar";
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
@@ -14,6 +14,10 @@ import Typography from "@material-ui/core/Typography";
 import classNames from "classnames";
 import withStyles from "@material-ui/core/styles/withStyles";
 import {mainMenuItems, secondaryMenuItems} from "./Menu";
+import PublicIcon from "@material-ui/core/SvgIcon/SvgIcon";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
 
 const drawerWidth = 240;
 
@@ -91,9 +95,9 @@ const styles = theme => ({
     },
 });
 
-const Dashboard = ({classes, children}) => {
+const Dashboard = props => {
+    const {classes, children} = props;
     const [open, setDrawerOpen] = useState(true);
-
     return (
         <>
             <AppBar
@@ -136,9 +140,21 @@ const Dashboard = ({classes, children}) => {
                     </IconButton>
                 </div>
                 <Divider />
+                {props.isSignedIn ? (
+                    <>
                 <List>{mainMenuItems}</List>
                 <Divider />
                 <List>{secondaryMenuItems}</List>
+                </>
+                    ) : (<li>
+                        <ListItem button component={Link} to={"/login"}>
+                            <ListItemIcon>
+                                {<PublicIcon />}
+                            </ListItemIcon>
+                            <ListItemText primary={"Login"} />
+                        </ListItem>
+                    </li>
+                )}
             </Drawer>
             <main className={classes.content}>
                 <div className={classes.appBarSpacer} />

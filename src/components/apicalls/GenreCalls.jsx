@@ -10,8 +10,6 @@ class GenreCalls {
         axios
             .get(this.endpoint + call)
             .then( response => {
-                console.log("Yay, success!");
-                console.log(response.data);
                 screen.setState({genres: response.data});
             })
             .catch(error => {console.log(error); console.log(error.response)});
@@ -29,7 +27,6 @@ class GenreCalls {
 
     createGenre(screen, genre) {
         let call = "/genres";
-        console.log(genre);
         axios
             .post(this.endpoint + call, genre)
             .then(response => {

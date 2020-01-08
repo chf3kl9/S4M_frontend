@@ -10,8 +10,6 @@ class MovieCalls {
         axios
             .get(this.endpoint + call)
             .then( response => {
-                console.log("Yay, success!");
-                console.log(response.data);
                 screen.setState({movies: response.data});
             })
             .catch(error => {console.log(error); console.log(error.response)});
@@ -29,7 +27,6 @@ class MovieCalls {
 
     createMovie(screen, movie) {
         let call = "/movies";
-        console.log(movie);
         axios
             .post(this.endpoint + call, movie)
             .then(response => {
@@ -42,7 +39,6 @@ class MovieCalls {
 
     updateMovie(screen, movie) {
         let call = "/movies";
-        console.log(movie);
         axios
             .put(this.endpoint + call, movie)
             .then(response => {

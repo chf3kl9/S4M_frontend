@@ -47,17 +47,30 @@ class GenreDetailScreen extends Component {
         }
     }
 
+    toMovieDetails(id){
+        this.props.history.push({
+            pathname: "/movie",
+            movieId: id
+        })
+    }
+
     render() {
         const {classes} = this.props;
         return (
             <div>
                 Name: {this.state.genre.name}
                 <br/><br/>
+                Genres:
+                <br/>
+                <div className="list-group">
+                    {this.state.genre.movies.map(movie => {
+                        return <div className="list-group-item" key={movie.id} onClick={() => this.toMovieDetails(movie.id)}>{movie.title}</div>
+                    })}
+                </div>
                 <Button variant="contained" className={classes.button}
                     onClick={() => this.editGenre()}>
                     Edit
                 </Button>
-
             </div>
         );
     }

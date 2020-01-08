@@ -65,7 +65,6 @@ class MovieEditScreen extends Component {
                 break;
             case "selectedGenres":
                 tempMovie.genres = event.target.value;
-                console.log(event.target.value);
                 break;
             default:
                 this.setState({[event.target.name]: event.target.value});
@@ -194,7 +193,6 @@ class MovieEditScreen extends Component {
     }
 
     deleteMovie() {
-        console.log("deleting movie with id: " + this.state.movie.id);
         this.movieCalls.deleteMovieById(this, this.state.movie.id);
     }
 
@@ -214,10 +212,8 @@ class MovieEditScreen extends Component {
     saveMovie() {
         if (this.state.movie.id < 1) {
             this.movieCalls.createMovie(this, this.state.movie);
-            console.log("creating movie");
         } else if (this.state.movie.id > 0) {
             this.movieCalls.updateMovie(this, this.state.movie);
-            console.log("updating movie");
         }
     }
 }
