@@ -30,6 +30,7 @@ class MovieCalls {
         axios
             .post(this.endpoint + call, movie)
             .then(response => {
+                console.log(response);
                 screen.props.history.push({
                     pathname: "/movies"
                 });

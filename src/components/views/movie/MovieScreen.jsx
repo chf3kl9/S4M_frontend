@@ -19,13 +19,18 @@ const styles = theme => ({ //todo move to other file and import
         padding: theme.spacing(0, 3),
     },
     margin: {
-        margin: theme.spacing.unit,
+        margin: theme.spacing(1),
         minWidth: 100,
     },
     paper: {
-        maxWidth: 400,
+        maxWidth: 300,
         margin: `${theme.spacing(1)}px auto`,
         padding: theme.spacing(2),
+    },
+    img: {
+        display: 'block',
+        maxWidth: '100%',
+        maxHeight: '100%',
     },
 });
 
@@ -100,6 +105,7 @@ class MovieScreen extends Component {
                             }}>
                             <Grid container wrap="nowrap" spacing={2}>
                                 <Grid item xs zeroMinWidth>
+                                    <img className={classes.img} alt="complex" src={movie.imageURL} />
                                     <Typography noWrap>{movie.title}</Typography>
                                 </Grid>
                             </Grid>

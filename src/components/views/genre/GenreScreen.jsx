@@ -1,7 +1,6 @@
 import React, {Component} from "react";
 import {withRouter} from "react-router-dom";
 import withStyles from "@material-ui/core/styles/withStyles";
-import MovieCalls from "../../apicalls/MovieCalls";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
@@ -20,7 +19,7 @@ const styles = theme => ({ //todo move to other file and import
         padding: theme.spacing(0, 3),
     },
     margin: {
-        margin: theme.spacing.unit,
+        margin: theme.spacing(1),
         minWidth: 100,
     },
     paper: {

@@ -19,6 +19,11 @@ import Input from "@material-ui/core/Input";
 import GenreCalls from "../../apicalls/GenreCalls";
 
 const styles = theme => ({ //todo move to other file and import
+    img: {
+        display: 'block',
+        maxWidth: '25%',
+        maxHeight: '25%',
+    },
 });
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -46,7 +51,7 @@ class MovieEditScreen extends Component {
     movieCalls = new MovieCalls();
 
     state = {
-        movie: {id: -1, title: "", description: "", link: "", genres: []},
+        movie: {id: -1, title: "", description: "", link: "", genres: [], imageURL:""},
         genres: [],
         open: false,
     };
@@ -65,6 +70,9 @@ class MovieEditScreen extends Component {
                 break;
             case "selectedGenres":
                 tempMovie.genres = event.target.value;
+                break;
+            case "imageURL":
+                tempMovie.imageURL = event.target.value;
                 break;
             default:
                 this.setState({[event.target.name]: event.target.value});
@@ -129,6 +137,18 @@ class MovieEditScreen extends Component {
                     </DialogActions>
                 </Dialog> {/* Delete Confirmation Dialog/Popup */}
                 <br/><br/>
+                <img className={classes.img} alt="complex" src={this.state.movie.imageURL}  />
+                <br/><br/>
+                <TextField
+                    id="standard"
+                    name="imageURL"
+                    label="ImageURL"
+                    value={this.state.movie.imageURL}
+                    onChange={this.handleChange}
+                    className={classes.textField}
+                    margin="normal"
+                /> {/* Image TextField */}
+                <br/>
 
                 <TextField
                     id="standard"

@@ -9,6 +9,11 @@ import Typography from "@material-ui/core/Typography";
 import CardHeader from "@material-ui/core/CardHeader";
 
 const styles = theme => ({ //todo move to other file and import
+    img: {
+        display: 'block',
+        maxWidth: '25%',
+        maxHeight: '25%',
+    },
 });
 
 class MovieDetailScreen extends Component {
@@ -41,7 +46,7 @@ class MovieDetailScreen extends Component {
         } else {
             let totalRating = 0.0;
             let count = 0;
-            this.state.movie.ratings.map(rating => {
+            this.state.movie.ratings.forEach(rating => {
                 totalRating += rating.value;
                 count++;
                 });
@@ -71,6 +76,8 @@ class MovieDetailScreen extends Component {
         const {classes} = this.props;
         return (
             <div>
+                <img className={classes.img} alt="complex" src={this.state.movie.imageURL} />
+                <br/><br/>
                 Title: {this.state.movie.title}
                 <br/><br/>
                 Description: {this.state.movie.description}
