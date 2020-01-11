@@ -100,12 +100,12 @@ class MovieDetailScreen extends Component {
                         return (
                             <Card className={classes.card}>
                                 <CardHeader
-                                    title={"comment.user.email"}
-                                    subheader={"comment.date"}
+                                    title={comment.user.email}
+                                    subheader={comment.date}
                                 />
                                 <CardContent>
                                     <Typography variant="body2" color="textSecondary" component="p">
-                                        {"comment.text"}
+                                        {comment.text}
                                     </Typography>
                                 </CardContent>
                             </Card>

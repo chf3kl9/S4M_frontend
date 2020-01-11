@@ -18,7 +18,7 @@ class LoginScreen extends Component {
         }
     };
 
-    async saveUserInfo(user) {
+    saveUserInfo(user) {
         const ref = firebase.firestore().collection("users").doc(user.uid)
         ref.get().then(
             doc => {
@@ -33,7 +33,7 @@ class LoginScreen extends Component {
         firebase.auth().onAuthStateChanged(user => {
             if (user != null) {
                 this.userCalls.createUser(user.email);
-                this.saveUserInfo(user)
+                this.saveUserInfo(user);
             }
         })
     };

@@ -11,6 +11,16 @@ class UserCalls {
             .post(this.endpoint + call, {email: email, isAdmin: false})
             .catch(error => {console.log(error); console.log(error.response)});
     }
+
+    getUser(screen, email) {
+        let call = "/users/email/" + email;
+        axios
+            .get(this.endpoint + call)
+            .then(response =>
+                screen.setState({user: response.data})
+            )
+            .catch(error => {console.log(error); console.log(error.response)});
+    }
 }
 
 export default UserCalls;
