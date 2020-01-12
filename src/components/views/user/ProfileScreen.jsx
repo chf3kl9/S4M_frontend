@@ -1,22 +1,28 @@
 import React, {Component} from "react";
-import UserCalls from "../../apicalls/UserCalls";
 import {Card} from "@material-ui/core";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
+import ApiCommunication from "../../apicalls/ApiCommunication";
 
 
 class ProfileScreen extends Component{
-
-    userCalls = new UserCalls();
 
     constructor(props){
         super(props);
         const {email} = this.props.location;
         if (email !== undefined)
-            this.userCalls.getUser(this, email);
+            ApiCommunication.graphQLRequest("query", "user",
+                "id email comments {id text movie {id title}} ratings {id value movie {id title}} watchedMovies{id title} favorites{id title}",[
+                    {name: "email", type: "String", value: email}
+                ])
+                .then(response => {this.setState({user: response.data.data})});
         else if (this.props.isSignedIn){
-            this.userCalls.getUser(this, this.props.email);
+            ApiCommunication.graphQLRequest("query", "user",
+                "id email comments {id text movie {id title}} ratings {id value movie {id title}} watchedMovies{id title} favorites{id title}",[
+                    {name: "email", type: "String", value: this.props.email}
+                ])
+                .then(response => {this.setState({user: response.data.data})});
         } else {
             this.props.history.push({
                 pathname: "/login"

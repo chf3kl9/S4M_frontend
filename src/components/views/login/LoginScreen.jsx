@@ -1,11 +1,9 @@
 import React, { Component } from "react";
 import firebase from "firebase";
 import { StyledFirebaseAuth } from "react-firebaseui";
-import UserCalls from "../../apicalls/UserCalls";
+import ApiCommunication from "../../apicalls/ApiCommunication";
 
 class LoginScreen extends Component {
-
-    userCalls = new UserCalls();
 
     uiConfig = {
         signInFlow: "popup",
@@ -32,7 +30,9 @@ class LoginScreen extends Component {
     componentDidMount() {
         firebase.auth().onAuthStateChanged(user => {
             if (user != null) {
-                this.userCalls.createUser(user.email);
+                ApiCommunication.graphQLRequest("mutation", "createUser", "id", [
+                    {name: "email", type: "String", value:user.email}
+                ]);
                 this.saveUserInfo(user);
             }
         })

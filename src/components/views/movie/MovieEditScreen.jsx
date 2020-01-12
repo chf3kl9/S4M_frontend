@@ -1,7 +1,6 @@
 import React, {Component} from "react";
 import {withRouter} from "react-router-dom";
 import withStyles from "@material-ui/core/styles/withStyles";
-import MovieCalls from "../../apicalls/MovieCalls";
 import Button from "@material-ui/core/Button";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -16,7 +15,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
 import Input from "@material-ui/core/Input";
-import GenreCalls from "../../apicalls/GenreCalls";
+import ApiCommunication from "../../apicalls/ApiCommunication";
 
 const styles = theme => ({ //todo move to other file and import
     img: {
@@ -43,12 +42,13 @@ class MovieEditScreen extends Component {
 
         const {movieId} = this.props.location;
         if (movieId !== undefined)
-            this.movieCalls.getMovieById(this, movieId);
-        this.genreCalls.getAllGenres(this);
-    }
+            ApiCommunication.graphQLRequest("query", "movie", "id title description link genres {id name} imageUrl", [
+                {name: "id", type: "Int", value: movieId}
+            ]).then(response => {this.setState({movie: response.data.data}, () => this.movieReturned())});
 
-    genreCalls = new GenreCalls();
-    movieCalls = new MovieCalls();
+        ApiCommunication.graphQLRequest("query", "genres", "id name", null)
+            .then(response => {this.setState({genres: response.data.data})});
+    }
 
     state = {
         movie: {id: -1, title: "", description: "", link: "", genres: [], imageURL:""},
@@ -83,11 +83,21 @@ class MovieEditScreen extends Component {
 
     movieReturned() {
         if (this.state.movie === null) {
-            //todo tell user that something went wrong, as the selected movie was not found
-            this.props.history.push({
-                pathname: "/movies"
-            });
+            this.toMovies()
         }
+    }
+
+    toMovies() {
+        this.props.history.push({
+            pathname: "/movies"
+        });
+    }
+
+    toMovie(id) {
+        this.props.history.push({
+            pathname: "/movie",
+            movieId: id
+        });
     }
 
     render() {
@@ -213,27 +223,35 @@ class MovieEditScreen extends Component {
     }
 
     deleteMovie() {
-        this.movieCalls.deleteMovieById(this, this.state.movie.id);
+        ApiCommunication.graphQLRequest("mutation", "deleteMovieById", null, [
+            {name: "id", type: "Int", value:this.state.movie.id}
+        ]).then(() => {this.toMovies()});
     }
 
     discardChanges() {
         if (this.state.movie.id > 0) {
-            this.props.history.push({
-                pathname: "/movie",
-                movieId: this.state.movie.id,
-            });
+            this.toMovie(this.state.movie.id);
         } else {
-            this.props.history.push({
-                pathname: "/movies",
-            })
+            this.toMovies();
         }
     }
 
     saveMovie() {
         if (this.state.movie.id < 1) {
-            this.movieCalls.createMovie(this, this.state.movie);
+            ApiCommunication.graphQLRequest("mutation", "createMovie", "id", [
+                {name: "title", type: "String", value:this.state.movie.title},
+                {name: "description", type: "String", value: this.state.movie.description},
+                {name: "link", type: "String", value: this.state.movie.link},
+                {name: "imageURL", type: "String", value: this.state.movie.imageURL}
+            ]).then(response => {this.toMovie(response.data.data.id);});
         } else if (this.state.movie.id > 0) {
-            this.movieCalls.updateMovie(this, this.state.movie);
+            ApiCommunication.graphQLRequest("mutation", "updateMovieById", "id", [
+                {name: "id", type: "Int", value: this.state.movie.id},
+                {name: "title", type: "String", value: this.state.movie.title},
+                {name: "description", type: "String", value: this.state.movie.description},
+                {name: "link", type: "String", value: this.state.movie.link},
+                {name: "imageURL", type: "String", value: this.state.movie.imageURL}
+            ]).then(response => {this.toMovie(response.data.data.id);});
         }
     }
 }

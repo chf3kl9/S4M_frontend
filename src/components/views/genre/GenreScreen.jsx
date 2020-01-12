@@ -10,7 +10,7 @@ import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-import GenreCalls from "../../apicalls/GenreCalls";
+import ApiCommunication from "../../apicalls/ApiCommunication";
 
 const styles = theme => ({ //todo move to other file and import
     root: {
@@ -33,10 +33,8 @@ class GenreScreen extends Component {
 
     constructor(props){
         super(props);
-        this.genreCalls.getAllGenres(this);
+        this.refreshList();
     }
-
-    genreCalls = new GenreCalls();
 
     state = {
         sort: "",
@@ -112,7 +110,8 @@ class GenreScreen extends Component {
     }
 
     refreshList() {
-        this.genreCalls.getAllGenres(this);
+        ApiCommunication.graphQLRequest("query", "genres", "id name", null)
+            .then(response => {this.setState({genres: response.data.data})});
     }
 
     onTileTouch(id) {

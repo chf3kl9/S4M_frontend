@@ -1,7 +1,6 @@
 import React, {Component} from "react";
 import {withRouter} from "react-router-dom";
 import withStyles from "@material-ui/core/styles/withStyles";
-import MovieCalls from "../../apicalls/MovieCalls";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
@@ -11,6 +10,7 @@ import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
+import ApiCommunication from "../../apicalls/ApiCommunication";
 
 const styles = theme => ({ //todo move to other file and import
     root: {
@@ -38,10 +38,8 @@ class MovieScreen extends Component {
 
     constructor(props){
         super(props);
-        this.movieCalls.getAllMovies(this);
+        this.refreshList();
     }
-
-    movieCalls = new MovieCalls();
 
     state = {
         sort: "",
@@ -118,7 +116,8 @@ class MovieScreen extends Component {
     }
 
     refreshList() {
-        this.movieCalls.getAllMovies(this);
+        ApiCommunication.graphQLRequest("query", "movies", "id title imageURL", null)
+            .then(response => {this.setState({movies: response.data.data})});
     }
 
     onTileTouch(id) {

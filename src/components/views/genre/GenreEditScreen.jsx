@@ -8,7 +8,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
-import GenreCalls from "../../apicalls/GenreCalls";
+import ApiCommunication from "../../apicalls/ApiCommunication";
 
 const styles = theme => ({ //todo move to other file and import
     PaperProps: {
@@ -28,14 +28,13 @@ class GenreEditScreen extends Component {
 
         const {genreId} = this.props.location;
         if (genreId !== undefined)
-            this.genreCalls.getGenreById(this, genreId);
+            ApiCommunication.graphQLRequest("query", "genre", "id name", [
+                {name: "id", type: "Int", value:genreId}
+            ]).then(response => {this.setState({genre: response.data.data}, this.genreReturned)});
     }
-
-    genreCalls = new GenreCalls();
 
     state = {
         genre: {id: -1, name: ""},
-        movies: [],
         open: false,
     };
 
@@ -54,11 +53,21 @@ class GenreEditScreen extends Component {
 
     genreReturned() {
         if (this.state.genre === null) {
-            //todo tell user that something went wrong, as the selected genre was not found
-            this.props.history.push({
-                pathname: "/genres"
-            });
+            this.toGenres();
         }
+    }
+
+    toGenres(){
+        this.props.history.push({
+            pathname: "/genres"
+        });
+    }
+
+    toGenre(id){
+        this.props.history.push({
+            pathname: "/genre",
+            genreId: id
+        });
     }
 
     render() {
@@ -127,27 +136,29 @@ class GenreEditScreen extends Component {
     }
 
     deleteGenre() {
-        this.genreCalls.deleteGenreById(this, this.state.genre.id);
+        ApiCommunication.graphQLRequest("mutation", "deleteGenreById", null, [
+            {name: "id", type: "Int", value:this.state.genre.id}
+        ]).then(() => {this.toGenres();});
     }
 
     discardChanges() {
         if (this.state.genre.id > 0) {
-            this.props.history.push({
-                pathname: "/genre",
-                genreId: this.state.genre.id,
-            });
+            this.toGenre(this.state.genre.id);
         } else {
-            this.props.history.push({
-                pathname: "/genres",
-            })
+            this.toGenres();
         }
     }
 
     saveGenre() {
         if (this.state.genre.id < 1) {
-            this.genreCalls.createGenre(this, this.state.genre);
+            ApiCommunication.graphQLRequest("mutation", "createGenre", "id", [
+                {name: "name", type: "String", value:this.state.genre.name}
+            ]).then(response => {this.toGenre(response.data.data.id);});
         } else if (this.state.genre.id > 0) {
-            this.genreCalls.updateGenre(this, this.state.genre);
+            ApiCommunication.graphQLRequest("mutation", "updateGenreById", "id", [
+                {name: "id", type: "Int", value: this.state.genre.id},
+                {name: "name", type: "String", value:this.state.genre.name}
+            ]).then(response => {this.toGenre(response.data.data.id);});
         }
     }
 }

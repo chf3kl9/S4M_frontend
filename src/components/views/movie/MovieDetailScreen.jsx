@@ -1,14 +1,13 @@
 import React, {Component} from "react";
 import {withRouter} from "react-router-dom";
 import withStyles from "@material-ui/core/styles/withStyles";
-import MovieCalls from "../../apicalls/MovieCalls";
 import Button from "@material-ui/core/Button";
 import {Card} from "@material-ui/core";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import CardHeader from "@material-ui/core/CardHeader";
 import TextField from "@material-ui/core/TextField";
-import UserCalls from "../../apicalls/UserCalls";
+import ApiCommunication from "../../apicalls/ApiCommunication";
 
 const styles = theme => ({ //todo move to other file and import
     img: {
@@ -25,17 +24,12 @@ class MovieDetailScreen extends Component {
 
         const {movieId} = this.props.location;
         if (movieId !== undefined)
-            this.movieCalls.getMovieById(this, movieId);
+            this.setState({movie: {id: movieId}}, () => this.getMovie());
         else
             this.props.history.push({
                 pathname: "/editMovie"
             })
-        if (this.props.isSignedIn)
-            this.userCalls.getUser(this, this.props.email);
     }
-
-    movieCalls = new MovieCalls();
-    userCalls = new UserCalls();
 
     state = {
         movie: {id: -1, title: "", description: "", link: "", genres: [], comments:[], ratings:[]},
@@ -45,7 +39,6 @@ class MovieDetailScreen extends Component {
 
     movieReturned() {
         if (this.state.movie === null) {
-            //todo tell user that something went wrong, as the selected movie was not found
             this.props.history.push({
                 pathname: "/movies"
             });
@@ -71,12 +64,22 @@ class MovieDetailScreen extends Component {
         }
     }
 
+    getMovie(){
+        ApiCommunication.graphQLRequest("query", "movie", "id", [
+            {name: "id", type: "Int", value: this.state.movie.id}
+        ]).then(response => {this.setState({movie: response.data.data}, () => this.movieReturned())});
+    }
+
     handleChange = event => {
         this.setState({[event.target.name]: event.target.value}, () => console.log(this.state.comment));
     };
 
     placeComment(){
-        this.userCalls.createComment({user: this.state.user, movie: this.state.movie, text: this.state.comment})
+        ApiCommunication.graphQLRequest("mutation", "placeComment", null, [
+            {name: "email", type: "String", value: this.props.email},
+            {name: "movieId", type: "Int", value: this.state.movie.id},
+            {name: "text", type: "String", value: this.state.comment}
+        ]).then(() => {this.getMovie()});
     }
 
     toGenreDetails(id){
