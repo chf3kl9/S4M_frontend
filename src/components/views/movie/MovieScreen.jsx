@@ -117,7 +117,7 @@ class MovieScreen extends Component {
 
     refreshList() {
         ApiCommunication.graphQLRequest("query", "movies", "id title imageURL", null)
-            .then(response => {this.setState({movies: response.data.data})});
+            .then(response => {this.setState({movies: response.data.data.movies})});
     }
 
     onTileTouch(id) {

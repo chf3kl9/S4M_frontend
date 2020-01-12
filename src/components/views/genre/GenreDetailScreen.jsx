@@ -16,7 +16,7 @@ class GenreDetailScreen extends Component {
         if (genreId !== undefined)
             ApiCommunication.graphQLRequest("query", "genre", "id name movies{id title}", [
                 {name: "id", type: "Int", value:genreId}
-                ]).then(response => {this.setState({genre: response.data.data}, this.genreReturned)});
+                ]).then(response => {this.setState({genre: response.data.data.genre}, this.genreReturned)});
         else
             this.props.history.push({
                 pathname: "/editGenre"
@@ -63,7 +63,7 @@ class GenreDetailScreen extends Component {
                 </Button>
                 Name: {this.state.genre.name}
                 <br/><br/>
-                Genres:
+                Movies with this genre:
                 <br/>
                 <div className="list-group">
                     {this.state.genre.movies.map(movie => {

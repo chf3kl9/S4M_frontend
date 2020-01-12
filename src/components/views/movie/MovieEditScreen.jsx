@@ -42,17 +42,17 @@ class MovieEditScreen extends Component {
 
         const {movieId} = this.props.location;
         if (movieId !== undefined)
-            ApiCommunication.graphQLRequest("query", "movie", "id title description link genres {id name} imageUrl", [
+            ApiCommunication.graphQLRequest("query", "movie", "id title description link genres {id name} imageURL", [
                 {name: "id", type: "Int", value: movieId}
-            ]).then(response => {this.setState({movie: response.data.data}, () => this.movieReturned())});
-
+            ]).then(response => {this.setState({movie: response.data.data.movie}, () => this.movieReturned())});
         ApiCommunication.graphQLRequest("query", "genres", "id name", null)
-            .then(response => {this.setState({genres: response.data.data})});
+            .then(response => {this.setState({genres: response.data.data.genres}, () => this.fixGenres())});
     }
 
     state = {
         movie: {id: -1, title: "", description: "", link: "", genres: [], imageURL:""},
         genres: [],
+        oldGenres:[],
         open: false,
     };
 
@@ -84,6 +84,22 @@ class MovieEditScreen extends Component {
     movieReturned() {
         if (this.state.movie === null) {
             this.toMovies()
+        }
+        else {
+            this.fixGenres()
+        }
+    }
+
+    fixGenres(){
+        if (this.state.movie.id > 0 && this.state.genres.length > 0) {
+            let genres = [];
+            this.state.genres.forEach(genre => {
+                if (this.state.movie.genres.findIndex(g => g.id === genre.id) >= 0)
+                    genres.push(genre)
+            });
+            let movie = this.state.movie;
+            movie.genres = genres;
+            this.setState({movie: movie, oldGenres: genres});
         }
     }
 
@@ -237,21 +253,39 @@ class MovieEditScreen extends Component {
     }
 
     saveMovie() {
+        let removedIds = [];
+        //genres in oldGenres missing from movie.genres => removeGenre
+        this.state.oldGenres.forEach(genre => {
+            if (this.state.movie.genres.indexOf(genre) < 0) {
+                removedIds.push(genre.id);
+            }
+        });
+        let addedIds = [];
+        //genres in movie.genres missing from oldGenres => addGenre
+        this.state.movie.genres.forEach(genre => {
+            if (this.state.oldGenres.indexOf(genre) < 0) {
+                addedIds.push(genre.id);
+            }
+        });
+
         if (this.state.movie.id < 1) {
             ApiCommunication.graphQLRequest("mutation", "createMovie", "id", [
                 {name: "title", type: "String", value:this.state.movie.title},
                 {name: "description", type: "String", value: this.state.movie.description},
                 {name: "link", type: "String", value: this.state.movie.link},
-                {name: "imageURL", type: "String", value: this.state.movie.imageURL}
-            ]).then(response => {this.toMovie(response.data.data.id);});
+                {name: "imageURL", type: "String", value: this.state.movie.imageURL},
+                {name: "genreIds", type: "String", value: addedIds}
+            ]).then(response => {this.toMovie(response.data.data.createMovie.id);});
         } else if (this.state.movie.id > 0) {
             ApiCommunication.graphQLRequest("mutation", "updateMovieById", "id", [
                 {name: "id", type: "Int", value: this.state.movie.id},
                 {name: "title", type: "String", value: this.state.movie.title},
                 {name: "description", type: "String", value: this.state.movie.description},
                 {name: "link", type: "String", value: this.state.movie.link},
-                {name: "imageURL", type: "String", value: this.state.movie.imageURL}
-            ]).then(response => {this.toMovie(response.data.data.id);});
+                {name: "imageURL", type: "String", value: this.state.movie.imageURL},
+                {name: "addedGenreIds", type: "String", value: addedIds},
+                {name: "removedGenreIds", type: "String", value: removedIds}
+            ]).then(response => {this.toMovie(response.data.data.updateMovieById.id);});
         }
     }
 }

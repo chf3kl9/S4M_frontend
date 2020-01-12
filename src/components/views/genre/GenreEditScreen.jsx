@@ -30,7 +30,7 @@ class GenreEditScreen extends Component {
         if (genreId !== undefined)
             ApiCommunication.graphQLRequest("query", "genre", "id name", [
                 {name: "id", type: "Int", value:genreId}
-            ]).then(response => {this.setState({genre: response.data.data}, this.genreReturned)});
+            ]).then(response => {this.setState({genre: response.data.data.genre}, this.genreReturned)});
     }
 
     state = {
@@ -153,12 +153,12 @@ class GenreEditScreen extends Component {
         if (this.state.genre.id < 1) {
             ApiCommunication.graphQLRequest("mutation", "createGenre", "id", [
                 {name: "name", type: "String", value:this.state.genre.name}
-            ]).then(response => {this.toGenre(response.data.data.id);});
+            ]).then(response => {console.log(response.data.data.createGenre.id); this.toGenre(response.data.data.createGenre.id);});
         } else if (this.state.genre.id > 0) {
             ApiCommunication.graphQLRequest("mutation", "updateGenreById", "id", [
                 {name: "id", type: "Int", value: this.state.genre.id},
                 {name: "name", type: "String", value:this.state.genre.name}
-            ]).then(response => {this.toGenre(response.data.data.id);});
+            ]).then(response => {this.toGenre(response.data.data.updateGenreById.id);});
         }
     }
 }

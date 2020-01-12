@@ -111,7 +111,7 @@ class GenreScreen extends Component {
 
     refreshList() {
         ApiCommunication.graphQLRequest("query", "genres", "id name", null)
-            .then(response => {this.setState({genres: response.data.data})});
+            .then(response => {this.setState({genres: response.data.data.genres})});
     }
 
     onTileTouch(id) {

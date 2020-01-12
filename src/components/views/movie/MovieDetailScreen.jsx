@@ -15,6 +15,9 @@ const styles = theme => ({ //todo move to other file and import
         maxWidth: '25%',
         maxHeight: '25%',
     },
+    card: {
+        maxWidth: '300'
+    }
 });
 
 class MovieDetailScreen extends Component {
@@ -24,7 +27,7 @@ class MovieDetailScreen extends Component {
 
         const {movieId} = this.props.location;
         if (movieId !== undefined)
-            this.setState({movie: {id: movieId}}, () => this.getMovie());
+            this.getMovie(movieId);
         else
             this.props.history.push({
                 pathname: "/editMovie"
@@ -64,10 +67,11 @@ class MovieDetailScreen extends Component {
         }
     }
 
-    getMovie(){
-        ApiCommunication.graphQLRequest("query", "movie", "id", [
-            {name: "id", type: "Int", value: this.state.movie.id}
-        ]).then(response => {this.setState({movie: response.data.data}, () => this.movieReturned())});
+    getMovie(id){
+        ApiCommunication.graphQLRequest("query", "movie",
+            "id title description link imageURL genres{id name} ratings{value} comments{id user{email} text}", [
+            {name: "id", type: "Int", value: id}
+        ]).then(response => {this.setState({movie: response.data.data.movie}, () => this.movieReturned())});
     }
 
     handleChange = event => {
@@ -79,7 +83,7 @@ class MovieDetailScreen extends Component {
             {name: "email", type: "String", value: this.props.email},
             {name: "movieId", type: "Int", value: this.state.movie.id},
             {name: "text", type: "String", value: this.state.comment}
-        ]).then(() => {this.getMovie()});
+        ]).then(() => {this.getMovie(this.state.movie.id)});
     }
 
     toGenreDetails(id){
@@ -146,10 +150,10 @@ class MovieDetailScreen extends Component {
                 <br/>
                     {this.state.movie.comments.map(comment => {
                         return (
-                            <Card className={classes.card} onClick={() => this.toProfile(comment.user.email)}>
+                            <Card key={comment.id} style={{maxWidth:'25%', marginTop: 10}} onClick={() => this.toProfile(comment.user.email)}>
                                 <CardHeader
                                     title={comment.user.email}
-                                    subheader={comment.date}
+                                    subtitle={comment.date}
                                 />
                                 <CardContent>
                                     <Typography variant="body2" color="textSecondary" component="p">

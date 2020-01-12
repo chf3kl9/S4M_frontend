@@ -13,16 +13,16 @@ class ProfileScreen extends Component{
         const {email} = this.props.location;
         if (email !== undefined)
             ApiCommunication.graphQLRequest("query", "user",
-                "id email comments {id text movie {id title}} ratings {id value movie {id title}} watchedMovies{id title} favorites{id title}",[
+                "id email comments {id text movie {id title}} ratings {id value ratedMovie {id title}} watchedMovies{id title} favorites{id title}",[
                     {name: "email", type: "String", value: email}
                 ])
-                .then(response => {this.setState({user: response.data.data})});
+                .then(response => {this.setState({user: response.data.data.user})});
         else if (this.props.isSignedIn){
             ApiCommunication.graphQLRequest("query", "user",
-                "id email comments {id text movie {id title}} ratings {id value movie {id title}} watchedMovies{id title} favorites{id title}",[
+                "id email comments {id text movie {id title}} ratings {id value ratedMovie {id title}} watchedMovies{id title} favorites{id title}",[
                     {name: "email", type: "String", value: this.props.email}
                 ])
-                .then(response => {this.setState({user: response.data.data})});
+                .then(response => {this.setState({user: response.data.data.user})});
         } else {
             this.props.history.push({
                 pathname: "/login"
@@ -37,7 +37,7 @@ class ProfileScreen extends Component{
     toMovieDetails(id){
         this.props.history.push({
             pathname: "/movie",
-            genreId: id
+            movieId: id
         })
     }
 
@@ -79,10 +79,9 @@ class ProfileScreen extends Component{
                 </div>
                 <div>
                     <h2>Comments:</h2>
-                    <br/>
                     {this.state.user.comments.map(comment => {
                         return (
-                            <Card className="card" onClick={() => this.toMovieDetails(comment.movie.id)}>
+                            <Card key={comment.id} className="card" style={{maxWidth:'25%', marginTop: 10}} onClick={() => this.toMovieDetails(comment.movie.id)}>
                                 <CardHeader
                                     title={comment.movie.title}
                                     subheader={comment.date}
