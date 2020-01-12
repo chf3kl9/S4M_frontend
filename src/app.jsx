@@ -13,6 +13,7 @@ import GenreEditScreen from "./components/views/genre/GenreEditScreen";
 import GenreDetailScreen from "./components/views/genre/GenreDetailScreen";
 import GenreScreen from "./components/views/genre/GenreScreen";
 import LoginScreen from "./components/views/login/LoginScreen";
+import ProfileScreen from "./components/views/user/ProfileScreen";
 
 const styles = () => ({
     root: { display: 'flex' },
@@ -39,7 +40,10 @@ class App extends Component {
 
     componentDidMount() {
         firebase.auth().onAuthStateChanged(user => {
-            this.setState({isSignedIn: !!user});
+            let email = "";
+            if (user != null)
+                email = user.email;
+            this.setState({isSignedIn: !!user, email: email}, () => console.log(user != null));
         });
     }
 
@@ -48,14 +52,15 @@ class App extends Component {
         return (
             <Router>
                 <div className={classes.root}>
-                    <Dashboard isSignedIn={this.state.isSignedIn} >
+                    <Dashboard isSignedIn={this.state.isSignedIn} {...this.props}>
                     <Switch>
                         <Route exact path="/" component={() => <Redirect to="/main"/>}/>
 
                         <Route path="/main" component={MainScreen}/>
+                        <Route path="/profile" component={(props) => <ProfileScreen {...props} isSignedIn={this.state.isSignedIn} email={this.state.email}/>}/>
 
                         <Route path="/movies" component={MovieScreen}/>
-                        <Route path="/movie" component={MovieDetailScreen}/>
+                        <Route path="/movie" component={(props) => <MovieDetailScreen {...props} isSignedIn={this.state.isSignedIn} email={this.state.email}/>}/>
                         <Route path="/editMovie" component={MovieEditScreen}/>
 
                         <Route path="/genres" component={GenreScreen}/>

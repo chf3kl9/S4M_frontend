@@ -25,6 +25,10 @@ export const mainMenuItems = (
         <ListItemLink to="/main"
                       primary="Main Screen"
                       icon={<PublicIcon />} />
+        <ListItemLink to="/profile"
+                      primary="Profile"
+                      icon={<PublicIcon />} />
+
         <li onClick={() => firebase.auth().signOut()}>
             <ListItem button component={Link} to={"/main"}>
                 <ListItemIcon>
