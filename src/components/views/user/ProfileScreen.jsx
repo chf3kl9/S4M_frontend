@@ -1,22 +1,28 @@
 import React, {Component} from "react";
-import UserCalls from "../../apicalls/UserCalls";
 import {Card} from "@material-ui/core";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
+import ApiCommunication from "../../apicalls/ApiCommunication";
 
 
 class ProfileScreen extends Component{
-
-    userCalls = new UserCalls();
 
     constructor(props){
         super(props);
         const {email} = this.props.location;
         if (email !== undefined)
-            this.userCalls.getUser(this, email);
+            ApiCommunication.graphQLRequest("query", "user",
+                "id email comments {id text movie {id title}} ratings {id value ratedMovie {id title}} watchedMovies{id title} favorites{id title}",[
+                    {name: "email", type: "String", value: email}
+                ])
+                .then(response => {this.setState({user: response.data.data.user})});
         else if (this.props.isSignedIn){
-            this.userCalls.getUser(this, this.props.email);
+            ApiCommunication.graphQLRequest("query", "user",
+                "id email comments {id text movie {id title}} ratings {id value ratedMovie {id title}} watchedMovies{id title} favorites{id title}",[
+                    {name: "email", type: "String", value: this.props.email}
+                ])
+                .then(response => {this.setState({user: response.data.data.user})});
         } else {
             this.props.history.push({
                 pathname: "/login"
@@ -31,7 +37,7 @@ class ProfileScreen extends Component{
     toMovieDetails(id){
         this.props.history.push({
             pathname: "/movie",
-            genreId: id
+            movieId: id
         })
     }
 
@@ -73,10 +79,9 @@ class ProfileScreen extends Component{
                 </div>
                 <div>
                     <h2>Comments:</h2>
-                    <br/>
                     {this.state.user.comments.map(comment => {
                         return (
-                            <Card className="card" onClick={() => this.toMovieDetails(comment.movie.id)}>
+                            <Card key={comment.id} className="card" style={{maxWidth:'25%', marginTop: 10}} onClick={() => this.toMovieDetails(comment.movie.id)}>
                                 <CardHeader
                                     title={comment.movie.title}
                                     subheader={comment.date}

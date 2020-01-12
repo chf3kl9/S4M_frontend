@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import {withRouter} from "react-router-dom";
 import withStyles from "@material-ui/core/styles/withStyles";
 import Button from "@material-ui/core/Button";
-import GenreCalls from "../../apicalls/GenreCalls";
+import ApiCommunication from "../../apicalls/ApiCommunication";
 
 const styles = theme => ({ //todo move to other file and import
 });
@@ -14,14 +14,14 @@ class GenreDetailScreen extends Component {
 
         const {genreId} = this.props.location;
         if (genreId !== undefined)
-            this.genreCalls.getGenreById(this, genreId);
+            ApiCommunication.graphQLRequest("query", "genre", "id name movies{id title}", [
+                {name: "id", type: "Int", value:genreId}
+                ]).then(response => {this.setState({genre: response.data.data.genre}, this.genreReturned)});
         else
             this.props.history.push({
                 pathname: "/editGenre"
             })
     }
-
-    genreCalls = new GenreCalls();
 
     state = {
         genre: {id: -1, name: "", movies: []},
@@ -29,7 +29,6 @@ class GenreDetailScreen extends Component {
 
     genreReturned() {
         if (this.state.genre === null) {
-            //todo tell user that something went wrong, as the selected genre was not found
             this.props.history.push({
                 pathname: "/genres"
             });
@@ -64,7 +63,7 @@ class GenreDetailScreen extends Component {
                 </Button>
                 Name: {this.state.genre.name}
                 <br/><br/>
-                Genres:
+                Movies with this genre:
                 <br/>
                 <div className="list-group">
                     {this.state.genre.movies.map(movie => {
