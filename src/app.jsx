@@ -60,7 +60,7 @@ class App extends Component {
                         <Route path="/profile" component={(props) => <ProfileScreen {...props} isSignedIn={this.state.isSignedIn} email={this.state.email}/>}/>
 
                         <Route path="/movies" component={MovieScreen}/>
-                        <Route path="/movie" component={MovieDetailScreen}/>
+                        <Route path="/movie" component={(props) => <MovieDetailScreen {...props} isSignedIn={this.state.isSignedIn} email={this.state.email}/>}/>
                         <Route path="/editMovie" component={MovieEditScreen}/>
 
                         <Route path="/genres" component={GenreScreen}/>

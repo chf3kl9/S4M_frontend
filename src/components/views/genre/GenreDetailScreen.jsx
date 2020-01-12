@@ -58,6 +58,10 @@ class GenreDetailScreen extends Component {
         const {classes} = this.props;
         return (
             <div>
+                <Button variant="contained" className={classes.button}
+                        onClick={() => this.editGenre()}>
+                    Edit
+                </Button>
                 Name: {this.state.genre.name}
                 <br/><br/>
                 Genres:
@@ -67,10 +71,6 @@ class GenreDetailScreen extends Component {
                         return <div className="list-group-item" key={movie.id} onClick={() => this.toMovieDetails(movie.id)}>{movie.title}</div>
                     })}
                 </div>
-                <Button variant="contained" className={classes.button}
-                    onClick={() => this.editGenre()}>
-                    Edit
-                </Button>
             </div>
         );
     }

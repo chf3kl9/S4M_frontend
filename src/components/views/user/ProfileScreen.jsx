@@ -17,11 +17,22 @@ class ProfileScreen extends Component{
             this.userCalls.getUser(this, email);
         else if (this.props.isSignedIn){
             this.userCalls.getUser(this, this.props.email);
+        } else {
+            this.props.history.push({
+                pathname: "/login"
+            })
         }
     }
 
     state = {
         user: {id: -1, email: "", comments: [], ratings: [], watchedMovies: [], favorites: []}
+    };
+
+    toMovieDetails(id){
+        this.props.history.push({
+            pathname: "/movie",
+            genreId: id
+        })
     }
 
     render() {
@@ -35,7 +46,7 @@ class ProfileScreen extends Component{
                         </div>
                         <ul className="list-group">
                             {this.state.user.favorites.map(movie => (
-                                <li key={movie.id} className="list-group-item" onClick={() => console.log(movie.title)}>-{movie.title}/></li>
+                                <li key={movie.id} className="list-group-item" onClick={() => this.toMovieDetails(movie.id)}>-{movie.title}/></li>
                             ))}
                         </ul>
                     </div>
@@ -45,7 +56,7 @@ class ProfileScreen extends Component{
                         </div>
                         <ul className="list-group">
                             {this.state.user.watchedMovies.map(movie => (
-                                <li key={movie.id} className="list-group-item" onClick={() => console.log(movie.title)}>-{movie.title}/></li>
+                                <li key={movie.id} className="list-group-item" onClick={() => this.toMovieDetails(movie.id)}>-{movie.title}/></li>
                             ))}
                         </ul>
                     </div>
@@ -55,7 +66,7 @@ class ProfileScreen extends Component{
                         </div>
                         <ul className="list-group">
                             {this.state.user.ratings.map(rating => (
-                                <li key={rating.id} className="list-group-item" onClick={() => console.log(rating.ratedMovie.title)}>-{rating.ratedMovie.title}, {rating.value}/10/></li>
+                                <li key={rating.id} className="list-group-item" onClick={() => this.toMovieDetails(rating.ratedMovie.id)}>-{rating.ratedMovie.title}, {rating.value}/10/></li>
                             ))}
                         </ul>
                     </div>
@@ -65,7 +76,7 @@ class ProfileScreen extends Component{
                     <br/>
                     {this.state.user.comments.map(comment => {
                         return (
-                            <Card className="card">
+                            <Card className="card" onClick={() => this.toMovieDetails(comment.movie.id)}>
                                 <CardHeader
                                     title={comment.movie.title}
                                     subheader={comment.date}

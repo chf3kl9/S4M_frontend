@@ -7,6 +7,8 @@ import {Card} from "@material-ui/core";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import CardHeader from "@material-ui/core/CardHeader";
+import TextField from "@material-ui/core/TextField";
+import UserCalls from "../../apicalls/UserCalls";
 
 const styles = theme => ({ //todo move to other file and import
     img: {
@@ -28,13 +30,17 @@ class MovieDetailScreen extends Component {
             this.props.history.push({
                 pathname: "/editMovie"
             })
+        if (this.props.isSignedIn)
+            this.userCalls.getUser(this, this.props.email);
     }
 
     movieCalls = new MovieCalls();
+    userCalls = new UserCalls();
 
     state = {
         movie: {id: -1, title: "", description: "", link: "", genres: [], comments:[], ratings:[]},
-        rating: {totalRating: 0, ratingCount: 0}
+        rating: {totalRating: 0, ratingCount: 0},
+        comment: "",
     };
 
     movieReturned() {
@@ -65,6 +71,14 @@ class MovieDetailScreen extends Component {
         }
     }
 
+    handleChange = event => {
+        this.setState({[event.target.name]: event.target.value}, () => console.log(this.state.comment));
+    };
+
+    placeComment(){
+        this.userCalls.createComment({user: this.state.user, movie: this.state.movie, text: this.state.comment})
+    }
+
     toGenreDetails(id){
         this.props.history.push({
             pathname: "/genre",
@@ -72,10 +86,21 @@ class MovieDetailScreen extends Component {
         })
     }
 
+    toProfile(email){
+        this.props.history.push({
+            pathname: "/profile",
+            genreId: email
+        })
+    }
+
     render() {
         const {classes} = this.props;
         return (
             <div>
+                <Button variant="contained" className={classes.button}
+                        onClick={() => this.editMovie()}>
+                    Edit
+                </Button>
                 <img className={classes.img} alt="complex" src={this.state.movie.imageURL} />
                 <br/><br/>
                 Title: {this.state.movie.title}
@@ -96,9 +121,29 @@ class MovieDetailScreen extends Component {
                 <br/><br/>
                 Comments:
                 <br/>
+                <TextField
+                    id="standard-multiline-flexible"
+                    name="comment"
+                    label="Write comment"
+                    multiline
+                    rows="6"
+                    value={this.state.comment}
+                    onChange={this.handleChange}
+                    className={classes.multiTextField}
+                    margin="normal"
+                />
+                <br/>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    onClick={() => this.placeComment()} >
+                    Place comment
+                </Button>
+                <br/>
                     {this.state.movie.comments.map(comment => {
                         return (
-                            <Card className={classes.card}>
+                            <Card className={classes.card} onClick={() => this.toProfile(comment.user.email)}>
                                 <CardHeader
                                     title={comment.user.email}
                                     subheader={comment.date}
@@ -110,11 +155,6 @@ class MovieDetailScreen extends Component {
                                 </CardContent>
                             </Card>
                             )})}
-                <Button variant="contained" className={classes.button}
-                    onClick={() => this.editMovie()}>
-                    Edit
-                </Button>
-
             </div>
         );
     }

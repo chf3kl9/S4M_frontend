@@ -21,6 +21,13 @@ class UserCalls {
             )
             .catch(error => {console.log(error); console.log(error.response)});
     }
+
+    createComment(comment){
+        let call = "/comments";
+        axios
+            .post(this.endpoint + call, {comment: comment})
+            .catch(error => {console.log(error); console.log(error.response)});
+    }
 }
 
 export default UserCalls;
