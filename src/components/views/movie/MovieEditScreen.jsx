@@ -57,28 +57,14 @@ class MovieEditScreen extends Component {
     };
 
     handleChange = event => {
-        let tempMovie = this.state.movie;
         switch(event.target.name) {
-            case "title":
-                tempMovie.title = event.target.value;
-                break;
-            case "link":
-                tempMovie.link = event.target.value;
-                break;
-            case "description":
-                tempMovie.description = event.target.value;
-                break;
-            case "selectedGenres":
-                tempMovie.genres = event.target.value;
-                break;
-            case "imageURL":
-                tempMovie.imageURL = event.target.value;
+            case "title" || "link" || "description" || "selectedGenres" || "imageURL":
+                this.setState({movie: {...this.state.movie, [event.target.name]: event.target.value}});
                 break;
             default:
                 this.setState({[event.target.name]: event.target.value});
                 break;
         }
-        this.setState({movie: tempMovie});
     };
 
     movieReturned() {

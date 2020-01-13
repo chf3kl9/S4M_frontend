@@ -39,16 +39,14 @@ class GenreEditScreen extends Component {
     };
 
     handleChange = event => {
-        let tempGenre = this.state.genre;
         switch(event.target.name) {
             case "name":
-                tempGenre.name = event.target.value;
+                this.setState({genre: {...this.state.genre, [event.target.name]: event.target.value}});
                 break;
             default:
                 this.setState({[event.target.name]: event.target.value});
                 break;
         }
-        this.setState({genre: tempGenre});
     };
 
     genreReturned() {
