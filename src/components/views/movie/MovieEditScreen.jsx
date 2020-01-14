@@ -58,7 +58,11 @@ class MovieEditScreen extends Component {
 
     handleChange = event => {
         switch(event.target.name) {
-            case "title" || "link" || "description" || "selectedGenres" || "imageURL":
+            case "title":
+            case "link":
+            case "description":
+            case "selectedGenres":
+            case "imageURL":
                 this.setState({movie: {...this.state.movie, [event.target.name]: event.target.value}});
                 break;
             default:
