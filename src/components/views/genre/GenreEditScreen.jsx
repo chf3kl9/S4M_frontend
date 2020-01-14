@@ -151,7 +151,7 @@ class GenreEditScreen extends Component {
         if (this.state.genre.id < 1) {
             ApiCommunication.graphQLRequest("mutation", "createGenre", "id", [
                 {name: "name", type: "String", value:this.state.genre.name}
-            ]).then(response => {console.log(response.data.data.createGenre.id); this.toGenre(response.data.data.createGenre.id);});
+            ]).then(response => {this.toGenre(response.data.data.createGenre.id);});
         } else if (this.state.genre.id > 0) {
             ApiCommunication.graphQLRequest("mutation", "updateGenreById", "id", [
                 {name: "id", type: "Int", value: this.state.genre.id},
