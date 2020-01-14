@@ -2,8 +2,8 @@ import axios from "axios";
 import GraphQLRG from "./GraphQLQueryGenerator";
 
 class ApiCommunication {
-    static endpoint = "http://localhost:8090/graphql";
-    //static endpoint = "https://s4m-backend.herokuapp.com/graphql";
+    //static endpoint = "http://localhost:8090/graphql";
+    static endpoint = "http://s4m-backend.herokuapp.com/graphql";
 
     /**
      * @author lfb0801
