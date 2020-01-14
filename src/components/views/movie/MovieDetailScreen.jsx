@@ -75,7 +75,7 @@ class MovieDetailScreen extends Component {
     }
 
     handleChange = event => {
-        this.setState({[event.target.name]: event.target.value}, () => console.log(this.state.comment));
+        this.setState({[event.target.name]: event.target.value});
     };
 
     placeComment(){
@@ -128,6 +128,21 @@ class MovieDetailScreen extends Component {
                 <br/><br/>
                 Comments:
                 <br/>
+                    {this.state.movie.comments.map(comment => {
+                        return (
+                            <Card key={comment.id} style={{maxWidth:'25%', marginTop: 10}} onClick={() => this.toProfile(comment.user.email)}>
+                                <CardHeader
+                                    title={comment.user.email}
+                                    subtitle={comment.date}
+                                />
+                                <CardContent>
+                                    <Typography variant="body2" color="textSecondary" component="p">
+                                        {comment.text}
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                            )})}
+                <br/>
                 <TextField
                     id="standard-multiline-flexible"
                     name="comment"
@@ -147,21 +162,6 @@ class MovieDetailScreen extends Component {
                     onClick={() => this.placeComment()} >
                     Place comment
                 </Button>
-                <br/>
-                    {this.state.movie.comments.map(comment => {
-                        return (
-                            <Card key={comment.id} style={{maxWidth:'25%', marginTop: 10}} onClick={() => this.toProfile(comment.user.email)}>
-                                <CardHeader
-                                    title={comment.user.email}
-                                    subtitle={comment.date}
-                                />
-                                <CardContent>
-                                    <Typography variant="body2" color="textSecondary" component="p">
-                                        {comment.text}
-                                    </Typography>
-                                </CardContent>
-                            </Card>
-                            )})}
             </div>
         );
     }

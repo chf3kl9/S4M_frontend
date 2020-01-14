@@ -43,7 +43,7 @@ class App extends Component {
             let email = "";
             if (user != null)
                 email = user.email;
-            this.setState({isSignedIn: !!user, email: email}, () => console.log(user != null));
+            this.setState({isSignedIn: !!user, email: email});
         });
     }
 

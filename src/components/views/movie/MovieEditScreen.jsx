@@ -61,7 +61,7 @@ class MovieEditScreen extends Component {
             case "title":
             case "link":
             case "description":
-            case "selectedGenres":
+            case "genres":
             case "imageURL":
                 this.setState({movie: {...this.state.movie, [event.target.name]: event.target.value}});
                 break;
@@ -208,7 +208,7 @@ class MovieEditScreen extends Component {
                         renderValue={selected => selected.map(x => x.name).join(', ')}
                         MenuProps={MenuProps}
                         inputProps={{
-                            name: "selectedGenres",
+                            name: "genres",
                             id: "genres-simple",
                         }}
                     >
