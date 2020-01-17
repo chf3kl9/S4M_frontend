@@ -55,13 +55,14 @@ class MovieScreen extends Component {
         this.setState({[event.target.name]: event.target.value});
     };
 
+    createMovie(){
+        this.props.history.push("/editMovie");
+    }
+
     render() {
         const {classes} = this.props;
         return (
             <div className={classes.root}>
-                <Button  variant="contained" color="secondary" className={classes.button} onClick={() => this.refreshList()}>
-                    Refresh
-                </Button> {/* Refresh button */}
                 <FormControl className={classes.margin}>
                     <InputLabel htmlFor="sort">Sort</InputLabel>
                     <Select
@@ -87,6 +88,15 @@ class MovieScreen extends Component {
                         onChange={this.handleChange}
                     />
                 </FormControl> {/* Filter input field */}
+                {this.props.isAdmin && (
+                    <>
+                        <Button variant="contained" color="secondary" className={classes.button}
+                                onClick={() => this.createMovie()}>
+                            Create new Movie
+                        </Button>
+                        <br/><br/>
+                    </>
+                )}
 
                 <Grid container spacing={1}>
                     {this.state.movies

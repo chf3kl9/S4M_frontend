@@ -13,6 +13,7 @@ import GenreDetailScreen from "./components/views/genre/GenreDetailScreen";
 import GenreScreen from "./components/views/genre/GenreScreen";
 import LoginScreen from "./components/views/login/LoginScreen";
 import ProfileScreen from "./components/views/user/ProfileScreen";
+import ApiCommunication from "./components/apicalls/ApiCommunication";
 
 const styles = () => ({
     root: { display: 'flex' },
@@ -34,14 +35,24 @@ firebase.initializeApp(firebaseConfig);
 
 class App extends Component {
     state = {
-        isSignedIn: false
+        isSignedIn: false,
+        email: null,
+        isAdmin: false,
     };
 
     componentDidMount() {
         firebase.auth().onAuthStateChanged(user => {
             let email = "";
-            if (user != null)
+            if (user != null) {
                 email = user.email;
+                ApiCommunication.graphQLRequest("query", "user", "isAdmin", [
+                    {name: "email", type: "String", value: email}
+                ]).then(response => {
+                    this.setState({isAdmin: response.data.data.user.isAdmin});
+                });
+            } else {
+                this.setState({isAdmin:false});
+            }
             this.setState({isSignedIn: !!user, email: email}, );
         });
     }
@@ -51,19 +62,19 @@ class App extends Component {
         return (
             <Router>
                 <div className={classes.root}>
-                    <Dashboard isSignedIn={this.state.isSignedIn} {...this.props}>
+                    <Dashboard isSignedIn={this.state.isSignedIn} {...this.props} isAdmin={this.state.isAdmin}>
                     <Switch>
                         <Route exact path="/" component={() => <Redirect to="/profile"/>}/>
 
-                        <Route path="/profile" component={(props) => <ProfileScreen {...props} isSignedIn={this.state.isSignedIn} email={this.state.email}/>}/>
+                        <Route path="/profile" component={(props) => <ProfileScreen {...props} isSignedIn={this.state.isSignedIn} email={this.state.email} isAdmin={this.state.isAdmin}/>}/>
 
-                        <Route path="/movies" component={(props) => <MovieScreen {...props} isSignedIn={this.state.isSignedIn}/>}/>
-                        <Route path="/movie" component={(props) => <MovieDetailScreen {...props} isSignedIn={this.state.isSignedIn} email={this.state.email}/>}/>
-                        <Route path="/editMovie" component={(props) => <MovieEditScreen {...props} isSignedIn={this.state.isSignedIn}/>}/>
+                        <Route path="/movies" component={(props) => <MovieScreen {...props} isSignedIn={this.state.isSignedIn} isAdmin={this.state.isAdmin}/>}/>
+                        <Route path="/movie" component={(props) => <MovieDetailScreen {...props} isSignedIn={this.state.isSignedIn} email={this.state.email} isAdmin={this.state.isAdmin}/>}/>
+                        <Route path="/editMovie" component={(props) => <MovieEditScreen {...props} isSignedIn={this.state.isSignedIn} email={this.state.email} isAdmin={this.state.isAdmin}/>}/>
 
-                        <Route path="/genres" component={(props) => <GenreScreen {...props} isSignedIn={this.state.isSignedIn}/>}/>
-                        <Route path="/genre" component={(props) => <GenreDetailScreen {...props} isSignedIn={this.state.isSignedIn}/>}/>
-                        <Route path="/editGenre" component={(props) => <GenreEditScreen {...props} isSignedIn={this.state.isSignedIn}/>}/>
+                        <Route path="/genres" component={(props) => <GenreScreen {...props} isSignedIn={this.state.isSignedIn} isAdmin={this.state.isAdmin}/>}/>
+                        <Route path="/genre" component={(props) => <GenreDetailScreen {...props} isSignedIn={this.state.isSignedIn} isAdmin={this.state.isAdmin}/>}/>
+                        <Route path="/editGenre" component={(props) => <GenreEditScreen {...props} isSignedIn={this.state.isSignedIn} email={this.state.email} isAdmin={this.state.isAdmin}/>}/>
 
                         <Route path="/login" component={(props) => <LoginScreen {...props} isSignedIn={this.state.isSignedIn}/>}/>
 

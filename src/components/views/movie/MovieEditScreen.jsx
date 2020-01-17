@@ -40,14 +40,20 @@ class MovieEditScreen extends Component {
     constructor(props){
         super(props);
 
-        if (this.props.isSignedIn){
-        const {movieId} = this.props.location;
-        if (movieId !== undefined)
-            ApiCommunication.graphQLRequest("query", "movie", "id title description link genres {id name} imageURL", [
-                {name: "id", type: "Int", value: movieId}
-            ]).then(response => {this.setState({movie: response.data.data.movie}, () => this.movieReturned())});
-        ApiCommunication.graphQLRequest("query", "genres", "id name", null)
-            .then(response => {this.setState({genres: response.data.data.genres}, () => this.fixGenres())});
+        if (this.props.isSignedIn && this.props.isAdmin) {
+            const {movieId} = this.props.location;
+            if (movieId !== undefined)
+                ApiCommunication.graphQLRequest("query", "movie", "id title description link genres {id name} imageURL", [
+                    {name: "id", type: "Int", value: movieId}
+                ]).then(response => {
+                    this.setState({movie: response.data.data.movie}, () => this.movieReturned())
+                });
+            ApiCommunication.graphQLRequest("query", "genres", "id name", null)
+                .then(response => {
+                    this.setState({genres: response.data.data.genres}, () => this.fixGenres())
+                });
+        } else if (this.props.isSignedIn) {
+            this.props.history.push("/movies")
         } else {
             this.props.history.push("/login");
         }
@@ -234,7 +240,8 @@ class MovieEditScreen extends Component {
 
     deleteMovie() {
         ApiCommunication.graphQLRequest("mutation", "deleteMovieById", null, [
-            {name: "id", type: "Int", value:this.state.movie.id}
+            {name: "id", type: "Int", value:this.state.movie.id},
+            {name: "email", type: "String", value:this.props.email}
         ]).then(() => {this.toMovies()});
     }
 
@@ -261,14 +268,14 @@ class MovieEditScreen extends Component {
                 addedIds.push(genre.id);
             }
         });
-
         if (this.state.movie.id < 1) {
             ApiCommunication.graphQLRequest("mutation", "createMovie", "id", [
                 {name: "title", type: "String", value:this.state.movie.title},
                 {name: "description", type: "String", value: this.state.movie.description},
                 {name: "link", type: "String", value: this.state.movie.link},
                 {name: "imageURL", type: "String", value: this.state.movie.imageURL},
-                {name: "genreIds", type: "String", value: addedIds}
+                {name: "genreIds", type: "String", value: addedIds},
+                {name: "email", type: "String", value:this.props.email}
             ]).then(response => {this.toMovie(response.data.data.createMovie.id);});
         } else if (this.state.movie.id > 0) {
             ApiCommunication.graphQLRequest("mutation", "updateMovieById", "id", [
@@ -278,7 +285,8 @@ class MovieEditScreen extends Component {
                 {name: "link", type: "String", value: this.state.movie.link},
                 {name: "imageURL", type: "String", value: this.state.movie.imageURL},
                 {name: "addedGenreIds", type: "String", value: addedIds},
-                {name: "removedGenreIds", type: "String", value: removedIds}
+                {name: "removedGenreIds", type: "String", value: removedIds},
+                {name: "email", type: "String", value:this.props.email}
             ]).then(response => {this.toMovie(response.data.data.updateMovieById.id);});
         }
     }

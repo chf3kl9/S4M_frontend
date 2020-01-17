@@ -59,10 +59,15 @@ class GenreDetailScreen extends Component {
         const {classes} = this.props;
         return (
             <div>
-                <Button variant="contained" className={classes.button}
-                        onClick={() => this.editGenre()}>
-                    Edit
-                </Button>
+                {this.props.isAdmin && (
+                    <>
+                        <Button variant="contained" className={classes.button}
+                                onClick={() => this.editGenre()}>
+                            Edit
+                        </Button>
+                        <br/><br/>
+                    </>
+                )}
                 Name: {this.state.genre.name}
                 <br/><br/>
                 Movies with this genre:

@@ -145,7 +145,7 @@ const Dashboard = props => {
                     <>
                 <List>{mainMenuItems}</List>
                 <Divider />
-                <List>{secondaryMenuItems}</List>
+                <List>{secondaryMenuItems(props)}</List>
                 </>
                     ) : (<li>
                         <ListItem button component={Link} to={"/login"}>

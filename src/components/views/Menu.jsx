@@ -37,22 +37,26 @@ export const mainMenuItems = (
     </>
 );
 
-export const secondaryMenuItems = (
+export const secondaryMenuItems = props => (
     <>
         <ListSubheader inset>Movies</ListSubheader>
         <ListItemLink to="/movies"
                       primary="Movies"
                       icon={<PublicIcon />} />
+        {props.isAdmin && (
         <ListItemLink to="/editMovie"
                       primary="Create Movie"
                       icon={<PublicIcon />} />
+        )}
 
         <ListSubheader inset>Genres</ListSubheader>
         <ListItemLink to="/genres"
                       primary="Genres"
                       icon={<PublicIcon />} />
+        {props.isAdmin && (
         <ListItemLink to="/editGenre"
                       primary="Create Genre"
                       icon={<PublicIcon />} />
+        )}
     </>
 );
