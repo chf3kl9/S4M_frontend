@@ -2,8 +2,23 @@ import React, { Component } from "react";
 import firebase from "firebase";
 import { StyledFirebaseAuth } from "react-firebaseui";
 import ApiCommunication from "../../apicalls/ApiCommunication";
+import withStyles from "@material-ui/core/styles/withStyles";
+import {withRouter} from "react-router-dom";
+
+const styles = theme => ({
+
+});
 
 class LoginScreen extends Component {
+
+    constructor(props){
+        super(props);
+        if (this.props.isSignedIn){
+            this.props.history.push({
+                pathname: "/profile"
+            })
+        }
+    }
 
     uiConfig = {
         signInFlow: "popup",
@@ -48,4 +63,4 @@ class LoginScreen extends Component {
     }
 }
 
-export default LoginScreen;
+export default withRouter(withStyles(styles)(LoginScreen));

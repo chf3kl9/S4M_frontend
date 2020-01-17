@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import firebase from "firebase";
 import {BrowserRouter as Router, Redirect, Route, Switch} from "react-router-dom";
 import NoMatch from "./components/views/NoMatch";
-import MainScreen from "./components/views/MainScreen";
 import MovieScreen from "./components/views/movie/MovieScreen";
 import Dashboard from "./components/views/Dashboard";
 import withStyles from "@material-ui/core/styles/withStyles";
@@ -54,9 +53,8 @@ class App extends Component {
                 <div className={classes.root}>
                     <Dashboard isSignedIn={this.state.isSignedIn} {...this.props}>
                     <Switch>
-                        <Route exact path="/" component={() => <Redirect to="/main"/>}/>
+                        <Route exact path="/" component={() => <Redirect to="/profile"/>}/>
 
-                        <Route path="/main" component={MainScreen}/>
                         <Route path="/profile" component={(props) => <ProfileScreen {...props} isSignedIn={this.state.isSignedIn} email={this.state.email}/>}/>
 
                         <Route path="/movies" component={MovieScreen}/>
@@ -67,8 +65,7 @@ class App extends Component {
                         <Route path="/genre" component={GenreDetailScreen}/>
                         <Route path="/editGenre" component={GenreEditScreen}/>
 
-                        <Route path="/login" component={LoginScreen}/>
-                        {/*<Route path="/logout" component={Logout} /> */}
+                        <Route path="/login" component={(props) => <LoginScreen {...props} isSignedIn={this.state.isSignedIn}/>}/>
 
                         <Route component={NoMatch}/>
                     </Switch>

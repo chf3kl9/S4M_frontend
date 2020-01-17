@@ -10,7 +10,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
 import ApiCommunication from "../../apicalls/ApiCommunication";
 
-const styles = theme => ({ //todo move to other file and import
+const styles = theme => ({
     PaperProps: {
         style: {
             maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,

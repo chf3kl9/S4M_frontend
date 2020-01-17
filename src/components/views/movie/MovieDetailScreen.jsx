@@ -8,8 +8,13 @@ import Typography from "@material-ui/core/Typography";
 import CardHeader from "@material-ui/core/CardHeader";
 import TextField from "@material-ui/core/TextField";
 import ApiCommunication from "../../apicalls/ApiCommunication";
+import Checkbox from "@material-ui/core/Checkbox";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Box from "@material-ui/core/Box";
+import Rating from "@material-ui/lab/Rating";
+import StarBorderIcon from '@material-ui/icons/StarBorder';
 
-const styles = theme => ({ //todo move to other file and import
+const styles = theme => ({
     img: {
         display: 'block',
         maxWidth: '25%',
@@ -38,6 +43,9 @@ class MovieDetailScreen extends Component {
         movie: {id: -1, title: "", description: "", link: "", genres: [], comments:[], ratings:[]},
         rating: {totalRating: 0, ratingCount: 0},
         comment: "",
+        inFavorites: false,
+        inWatchList: false,
+        userRating: 0
     };
 
     movieReturned() {
@@ -46,13 +54,16 @@ class MovieDetailScreen extends Component {
                 pathname: "/movies"
             });
         } else {
-            let totalRating = 0.0;
+            let totalRating = 0;
             let count = 0;
             this.state.movie.ratings.forEach(rating => {
                 totalRating += rating.value;
                 count++;
                 });
-            this.setState({rating: {totalRating: totalRating / count, ratingCount: count}});
+            if (count > 0)
+                totalRating = (totalRating / count);
+
+            this.setState({rating: {totalRating: totalRating, ratingCount: count}});
         }
     }
 
@@ -62,21 +73,68 @@ class MovieDetailScreen extends Component {
                 pathname: "/editMovie",
                 movieId: this.state.movie.id
             })
-        } else {
-            //todo tell user to wait a bit so that the movie can load
         }
     }
 
     getMovie(id){
         ApiCommunication.graphQLRequest("query", "movie",
-            "id title description link imageURL genres{id name} ratings{value} comments{id user{email} text}", [
+            "id title description link imageURL genres{id name} ratings{value user{email}} comments{id user{email} text}", [
             {name: "id", type: "Int", value: id}
-        ]).then(response => {this.setState({movie: response.data.data.movie}, () => this.movieReturned())});
+        ]).then(response => {
+            let index = response.data.data.movie.ratings.findIndex(r => r.user.email === this.props.email);
+            let userRating = 0;
+            if (index > -1)
+                userRating = response.data.data.movie.ratings[index].value;
+            this.setState({movie: response.data.data.movie, userRating: userRating}, () => this.movieReturned())
+        });
+        ApiCommunication.graphQLRequest("query", "user",
+            "favorites{id} watchedMovies{id}", [
+                {name: "email", type: "String", value: this.props.email}]
+        ).then(response => {
+            this.setState({
+                inFavorites: response.data.data.user.favorites.find(f => f.id === id) !== undefined,
+                inWatchList: response.data.data.user.watchedMovies.find(m => m.id === id) !== undefined
+            });
+        });
     }
 
     handleChange = event => {
         this.setState({[event.target.name]: event.target.value});
     };
+
+    handleBoolChange = name => event => {
+        let call = "";
+        let bool = event.target.checked;
+        if (name === "inFavorites") {
+            if (!bool) {
+                call = "removeMovieFromFavorites";
+            } else {
+                call = "addMovieToFavorites";
+            }
+        } else if (name === "inWatchList") {
+            if(!bool) {
+                call = "removeMovieFromWatchlist";
+            } else {
+                call = "addMovieToWatchlist";
+            }
+        }
+        ApiCommunication.graphQLRequest("mutation", call, null, [
+            {name: "email", type: "String", value: this.props.email},
+            {name: "movieId", type: "Int", value: this.state.movie.id}
+        ]).then(() => {
+            this.setState({[name]: bool})
+        });
+    };
+
+    handleRatingChange(newValue) {
+        ApiCommunication.graphQLRequest("mutation", "rateMovie", null, [
+            {name: "email", type: "String", value: this.props.email},
+            {name: "movieId", type: "Int", value: this.state.movie.id},
+            {name: "rating", type:"Int", value: newValue}
+        ]).then(() =>{
+            this.getMovie(this.state.movie.id);
+        });
+    }
 
     placeComment(){
         ApiCommunication.graphQLRequest("mutation", "placeComment", null, [
@@ -96,7 +154,7 @@ class MovieDetailScreen extends Component {
     toProfile(email){
         this.props.history.push({
             pathname: "/profile",
-            genreId: email
+            email: email
         })
     }
 
@@ -111,6 +169,28 @@ class MovieDetailScreen extends Component {
                 <img className={classes.img} alt="complex" src={this.state.movie.imageURL} />
                 <br/><br/>
                 Title: {this.state.movie.title}
+                <FormControlLabel
+                    control={
+                        <Checkbox
+                            checked={this.state.inFavorites}
+                            onChange={this.handleBoolChange("inFavorites")}
+                            value="inFavorites"
+                            color="primary"
+                        />
+                    }
+                    label="In Favorites"
+                />
+                <FormControlLabel
+                    control={
+                        <Checkbox
+                            checked={this.state.inWatchList}
+                            onChange={this.handleBoolChange("inWatchList")}
+                            value="inWatchList"
+                            color="primary"
+                        />
+                    }
+                    label="In Watchlist"
+                />
                 <br/><br/>
                 Description: {this.state.movie.description}
                 <br/><br/>
@@ -124,8 +204,21 @@ class MovieDetailScreen extends Component {
                     })}
                 </ul>
                 <br/><br/>
-                Rating: {this.state.rating.totalRating}/10 (by {this.state.rating.ratingCount} users)]
-                <br/><br/>
+                <Box component="fieldset" mb={3} borderColor="transparent">
+                    <Typography component="legend">Your rating</Typography>
+                    <Rating
+                        onChange={(event, newValue) => this.handleRatingChange(newValue)}
+                        name="simple-controlled"
+                        value={this.state.userRating}
+                        max={10}
+                        emptyIcon={<StarBorderIcon fontSize="inherit" />}
+                    />
+                </Box>
+
+                <Box component="fieldset" mb={3} borderColor="transparent">
+                    <Typography component="legend">Movie Rating by {this.state.rating.ratingCount} users:</Typography>
+                    <Rating name="read-only" value={this.state.rating.totalRating} max={10} readOnly />
+                </Box>
                 Comments:
                 <br/>
                     {this.state.movie.comments.map(comment => {

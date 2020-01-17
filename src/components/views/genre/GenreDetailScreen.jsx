@@ -4,7 +4,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import Button from "@material-ui/core/Button";
 import ApiCommunication from "../../apicalls/ApiCommunication";
 
-const styles = theme => ({ //todo move to other file and import
+const styles = theme => ({
 });
 
 class GenreDetailScreen extends Component {
@@ -41,8 +41,6 @@ class GenreDetailScreen extends Component {
                 pathname: "/editGenre",
                 genreId: this.state.genre.id
             })
-        } else {
-            //todo tell user to wait a bit so that the genre can load
         }
     }
 
