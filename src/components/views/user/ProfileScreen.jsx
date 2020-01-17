@@ -6,12 +6,22 @@ import Typography from "@material-ui/core/Typography";
 import ApiCommunication from "../../apicalls/ApiCommunication";
 import Rating from "@material-ui/lab/Rating";
 import Box from "@material-ui/core/Box";
+import IconButton from "@material-ui/core/IconButton";
+import DeleteTwoToneIcon from "@material-ui/icons/DeleteTwoTone";
 
 
 class ProfileScreen extends Component{
 
     constructor(props){
         super(props);
+        this.getUser();
+    }
+
+    state = {
+        user: {id: -1, email: "", comments: [], ratings: [], watchedMovies: [], favorites: []}
+    };
+
+    getUser(){
         const {email} = this.props.location;
         if (this.props.isSignedIn && email !== undefined)
             ApiCommunication.graphQLRequest("query", "user",
@@ -32,14 +42,20 @@ class ProfileScreen extends Component{
         }
     }
 
-    state = {
-        user: {id: -1, email: "", comments: [], ratings: [], watchedMovies: [], favorites: []}
-    };
-
     toMovieDetails(id){
         this.props.history.push({
             pathname: "/movie",
             movieId: id
+        })
+    }
+
+    deleteComment(id){
+        ApiCommunication.graphQLRequest("mutation", "deleteCommentById", null, [
+            {name:"id", type:"Int", value:id},
+            {name:"email", type:"String", value:this.props.email},
+        ]).then(response => {
+            console.log(response);
+            this.getUser();
         })
     }
 
@@ -87,10 +103,17 @@ class ProfileScreen extends Component{
                     <h2>Comments:</h2>
                     {this.state.user.comments.map(comment => {
                         return (
-                            <Card key={comment.id} className="card" style={{maxWidth:'25%', marginTop: 10}} onClick={() => this.toMovieDetails(comment.movie.id)}>
+                            <Card key={comment.id} className="card" style={{maxWidth:'25%', marginTop: 10}}>
                                 <CardHeader
-                                    title={comment.movie.title}
+                                    title={
+                                        <a onClick={() => this.toMovieDetails(comment.movie.id)}>{comment.movie.title}</a>
+                                    }
                                     subheader={comment.date}
+                                    action={
+                                        <IconButton onClick={() => this.deleteComment(comment.id)}>
+                                            <DeleteTwoToneIcon />
+                                        </IconButton>
+                                    }
                                 />
                                 <CardContent>
                                     <Typography variant="body2" color="textSecondary" component="p">

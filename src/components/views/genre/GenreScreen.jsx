@@ -50,13 +50,14 @@ class GenreScreen extends Component {
         this.setState({[event.target.name]: event.target.value});
     };
 
+    createGenre(){
+        this.props.history.push("/editGenre");
+    }
+
     render() {
         const {classes} = this.props;
         return (
             <div className={classes.root}>
-                <Button  variant="contained" color="secondary" className={classes.button} onClick={() => this.refreshList()}>
-                    Refresh
-                </Button> {/* Refresh button */}
                 <FormControl className={classes.margin}>
                     <InputLabel htmlFor="sort">Sort</InputLabel>
                     <Select
@@ -82,6 +83,15 @@ class GenreScreen extends Component {
                         onChange={this.handleChange}
                     />
                 </FormControl> {/* Filter input field */}
+                {this.props.isAdmin && (
+                    <>
+                        <Button variant="contained" color="secondary" className={classes.button}
+                                onClick={() => this.createGenre()}>
+                            Create new Genre
+                        </Button>
+                        <br/><br/>
+                    </>
+                )}
 
                 <Grid container spacing={1}>
                     {this.state.genres

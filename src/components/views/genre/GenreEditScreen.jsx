@@ -25,7 +25,7 @@ class GenreEditScreen extends Component {
 
     constructor(props){
         super(props);
-        if (this.props.isSignedIn) {
+        if (this.props.isSignedIn && this.props.isAdmin) {
             const {genreId} = this.props.location;
             if (genreId !== undefined)
                 ApiCommunication.graphQLRequest("query", "genre", "id name", [
@@ -33,6 +33,8 @@ class GenreEditScreen extends Component {
                 ]).then(response => {
                     this.setState({genre: response.data.data.genre}, this.genreReturned)
                 });
+        } else if (this.props.isSignedIn){
+            this.props.history.push("/genres")
         } else {
             this.props.history.push("/login");
         }
@@ -140,7 +142,8 @@ class GenreEditScreen extends Component {
 
     deleteGenre() {
         ApiCommunication.graphQLRequest("mutation", "deleteGenreById", null, [
-            {name: "id", type: "Int", value:this.state.genre.id}
+            {name: "id", type: "Int", value:this.state.genre.id},
+            {name: "email", type: "String", value: this.props.email}
         ]).then(() => {this.toGenres();});
     }
 
@@ -155,12 +158,14 @@ class GenreEditScreen extends Component {
     saveGenre() {
         if (this.state.genre.id < 1) {
             ApiCommunication.graphQLRequest("mutation", "createGenre", "id", [
-                {name: "name", type: "String", value:this.state.genre.name}
+                {name: "name", type: "String", value:this.state.genre.name},
+                {name: "email", type: "String", value:this.props.email}
             ]).then(response => {this.toGenre(response.data.data.createGenre.id);});
         } else if (this.state.genre.id > 0) {
             ApiCommunication.graphQLRequest("mutation", "updateGenreById", "id", [
                 {name: "id", type: "Int", value: this.state.genre.id},
-                {name: "name", type: "String", value:this.state.genre.name}
+                {name: "name", type: "String", value:this.state.genre.name},
+                {name: "email", type: "String", value: this.props.email}
             ]).then(response => {this.toGenre(response.data.data.updateGenreById.id);});
         }
     }

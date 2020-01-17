@@ -141,11 +141,15 @@ class MovieDetailScreen extends Component {
     }
 
     placeComment(){
-        ApiCommunication.graphQLRequest("mutation", "placeComment", null, [
-            {name: "email", type: "String", value: this.props.email},
-            {name: "movieId", type: "Int", value: this.state.movie.id},
-            {name: "text", type: "String", value: this.state.comment}
-        ]).then(() => {this.getMovie(this.state.movie.id)});
+        if (this.state.comment.length > 0) {
+            ApiCommunication.graphQLRequest("mutation", "placeComment", null, [
+                {name: "email", type: "String", value: this.props.email},
+                {name: "movieId", type: "Int", value: this.state.movie.id},
+                {name: "text", type: "String", value: this.state.comment}
+            ]).then(() => {
+                this.getMovie(this.state.movie.id)
+            });
+        }
     }
 
     toGenreDetails(id){
@@ -166,10 +170,12 @@ class MovieDetailScreen extends Component {
         const {classes} = this.props;
         return (
             <div>
-                <Button variant="contained" className={classes.button}
-                        onClick={() => this.editMovie()}>
-                    Edit
-                </Button>
+                {this.props.isAdmin && (
+                    <Button variant="contained" className={classes.button}
+                            onClick={() => this.editMovie()}>
+                        Edit
+                    </Button>
+                )}
                 <img className={classes.img} alt="complex" src={this.state.movie.imageURL} />
                 <br/><br/>
                 Title: {this.state.movie.title}
