@@ -25,12 +25,17 @@ class GenreEditScreen extends Component {
 
     constructor(props){
         super(props);
-
-        const {genreId} = this.props.location;
-        if (genreId !== undefined)
-            ApiCommunication.graphQLRequest("query", "genre", "id name", [
-                {name: "id", type: "Int", value:genreId}
-            ]).then(response => {this.setState({genre: response.data.data.genre}, this.genreReturned)});
+        if (this.props.isSignedIn) {
+            const {genreId} = this.props.location;
+            if (genreId !== undefined)
+                ApiCommunication.graphQLRequest("query", "genre", "id name", [
+                    {name: "id", type: "Int", value: genreId}
+                ]).then(response => {
+                    this.setState({genre: response.data.data.genre}, this.genreReturned)
+                });
+        } else {
+            this.props.history.push("/login");
+        }
     }
 
     state = {

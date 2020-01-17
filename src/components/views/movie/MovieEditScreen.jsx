@@ -40,6 +40,7 @@ class MovieEditScreen extends Component {
     constructor(props){
         super(props);
 
+        if (this.props.isSignedIn){
         const {movieId} = this.props.location;
         if (movieId !== undefined)
             ApiCommunication.graphQLRequest("query", "movie", "id title description link genres {id name} imageURL", [
@@ -47,6 +48,9 @@ class MovieEditScreen extends Component {
             ]).then(response => {this.setState({movie: response.data.data.movie}, () => this.movieReturned())});
         ApiCommunication.graphQLRequest("query", "genres", "id name", null)
             .then(response => {this.setState({genres: response.data.data.genres}, () => this.fixGenres())});
+        } else {
+            this.props.history.push("/login");
+        }
     }
 
     state = {

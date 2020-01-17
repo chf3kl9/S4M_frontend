@@ -13,7 +13,7 @@ class ProfileScreen extends Component{
     constructor(props){
         super(props);
         const {email} = this.props.location;
-        if (email !== undefined)
+        if (this.props.isSignedIn && email !== undefined)
             ApiCommunication.graphQLRequest("query", "user",
                 "id email comments {id text movie {id title}} ratings {id value ratedMovie {id title}} watchedMovies{id title} favorites{id title}",[
                     {name: "email", type: "String", value: email}
@@ -74,7 +74,7 @@ class ProfileScreen extends Component{
                         </div>
                         <ul className="list-group">
                             {this.state.user.ratings.map(rating => (
-                                <Box component="fieldset" mb={3} borderColor="transparent"
+                                <Box key={rating.id} component="fieldset" mb={3} borderColor="transparent"
                                      onClick={() => this.toMovieDetails(rating.ratedMovie.id)}>
                                     <Typography component="legend">{rating.ratedMovie.title}</Typography>
                                     <Rating name="read-only" value={rating.value} max={10} readOnly />
