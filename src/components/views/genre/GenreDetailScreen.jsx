@@ -12,6 +12,7 @@ class GenreDetailScreen extends Component {
     constructor(props){
         super(props);
 
+        if (this.props.isSignedIn){
         const {genreId} = this.props.location;
         if (genreId !== undefined)
             ApiCommunication.graphQLRequest("query", "genre", "id name movies{id title}", [
@@ -21,6 +22,9 @@ class GenreDetailScreen extends Component {
             this.props.history.push({
                 pathname: "/editGenre"
             })
+        } else {
+            this.props.history.push("/login");
+        }
     }
 
     state = {

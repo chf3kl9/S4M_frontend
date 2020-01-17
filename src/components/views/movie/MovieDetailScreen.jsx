@@ -30,13 +30,17 @@ class MovieDetailScreen extends Component {
     constructor(props){
         super(props);
 
-        const {movieId} = this.props.location;
-        if (movieId !== undefined)
-            this.getMovie(movieId);
-        else
-            this.props.history.push({
-                pathname: "/editMovie"
-            })
+        if (this.props.isSignedIn) {
+            const {movieId} = this.props.location;
+            if (movieId !== undefined)
+                this.getMovie(movieId);
+            else
+                this.props.history.push({
+                    pathname: "/editMovie"
+                })
+        } else {
+            this.props.history.push("/login");
+        }
     }
 
     state = {

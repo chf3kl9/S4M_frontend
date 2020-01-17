@@ -124,7 +124,7 @@ const Dashboard = props => {
                         noWrap
                         className={classes.title}
                     >
-                        determine title
+                        Ultimate Movie Manager
                     </Typography>
                 </Toolbar>
             </AppBar>
@@ -159,11 +159,6 @@ const Dashboard = props => {
             </Drawer>
             <main className={classes.content}>
                 <div className={classes.appBarSpacer} />
-                <Route>
-                    {({ location }) => (
-                        <Typography gutterBottom>Current route: {location.pathname}</Typography>
-                    )}
-                </Route>
                 {children}
             </main>
         </>

@@ -38,7 +38,11 @@ class MovieScreen extends Component {
 
     constructor(props){
         super(props);
-        this.refreshList();
+        if (this.props.isSignedIn) {
+            this.refreshList();
+        } else {
+            this.props.history.push("/login");
+        }
     }
 
     state = {

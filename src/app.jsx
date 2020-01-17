@@ -42,7 +42,7 @@ class App extends Component {
             let email = "";
             if (user != null)
                 email = user.email;
-            this.setState({isSignedIn: !!user, email: email});
+            this.setState({isSignedIn: !!user, email: email}, );
         });
     }
 
@@ -57,13 +57,13 @@ class App extends Component {
 
                         <Route path="/profile" component={(props) => <ProfileScreen {...props} isSignedIn={this.state.isSignedIn} email={this.state.email}/>}/>
 
-                        <Route path="/movies" component={MovieScreen}/>
+                        <Route path="/movies" component={(props) => <MovieScreen {...props} isSignedIn={this.state.isSignedIn}/>}/>
                         <Route path="/movie" component={(props) => <MovieDetailScreen {...props} isSignedIn={this.state.isSignedIn} email={this.state.email}/>}/>
-                        <Route path="/editMovie" component={MovieEditScreen}/>
+                        <Route path="/editMovie" component={(props) => <MovieEditScreen {...props} isSignedIn={this.state.isSignedIn}/>}/>
 
-                        <Route path="/genres" component={GenreScreen}/>
-                        <Route path="/genre" component={GenreDetailScreen}/>
-                        <Route path="/editGenre" component={GenreEditScreen}/>
+                        <Route path="/genres" component={(props) => <GenreScreen {...props} isSignedIn={this.state.isSignedIn}/>}/>
+                        <Route path="/genre" component={(props) => <GenreDetailScreen {...props} isSignedIn={this.state.isSignedIn}/>}/>
+                        <Route path="/editGenre" component={(props) => <GenreEditScreen {...props} isSignedIn={this.state.isSignedIn}/>}/>
 
                         <Route path="/login" component={(props) => <LoginScreen {...props} isSignedIn={this.state.isSignedIn}/>}/>
 
