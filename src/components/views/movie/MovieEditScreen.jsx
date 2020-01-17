@@ -17,7 +17,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import Input from "@material-ui/core/Input";
 import ApiCommunication from "../../apicalls/ApiCommunication";
 
-const styles = theme => ({ //todo move to other file and import
+const styles = theme => ({
     img: {
         display: 'block',
         maxWidth: '25%',

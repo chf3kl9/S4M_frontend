@@ -4,6 +4,8 @@ import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import ApiCommunication from "../../apicalls/ApiCommunication";
+import Rating from "@material-ui/lab/Rating";
+import Box from "@material-ui/core/Box";
 
 
 class ProfileScreen extends Component{
@@ -52,7 +54,7 @@ class ProfileScreen extends Component{
                         </div>
                         <ul className="list-group">
                             {this.state.user.favorites.map(movie => (
-                                <li key={movie.id} className="list-group-item" onClick={() => this.toMovieDetails(movie.id)}>-{movie.title}/></li>
+                                <li key={movie.id} className="list-group-item" onClick={() => this.toMovieDetails(movie.id)}>{movie.title}</li>
                             ))}
                         </ul>
                     </div>
@@ -62,7 +64,7 @@ class ProfileScreen extends Component{
                         </div>
                         <ul className="list-group">
                             {this.state.user.watchedMovies.map(movie => (
-                                <li key={movie.id} className="list-group-item" onClick={() => this.toMovieDetails(movie.id)}>-{movie.title}/></li>
+                                <li key={movie.id} className="list-group-item" onClick={() => this.toMovieDetails(movie.id)}>{movie.title}</li>
                             ))}
                         </ul>
                     </div>
@@ -72,7 +74,11 @@ class ProfileScreen extends Component{
                         </div>
                         <ul className="list-group">
                             {this.state.user.ratings.map(rating => (
-                                <li key={rating.id} className="list-group-item" onClick={() => this.toMovieDetails(rating.ratedMovie.id)}>-{rating.ratedMovie.title}, {rating.value}/10/></li>
+                                <Box component="fieldset" mb={3} borderColor="transparent"
+                                     onClick={() => this.toMovieDetails(rating.ratedMovie.id)}>
+                                    <Typography component="legend">{rating.ratedMovie.title}</Typography>
+                                    <Rating name="read-only" value={rating.value} max={10} readOnly />
+                                </Box>
                             ))}
                         </ul>
                     </div>

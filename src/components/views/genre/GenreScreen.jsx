@@ -12,7 +12,7 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import ApiCommunication from "../../apicalls/ApiCommunication";
 
-const styles = theme => ({ //todo move to other file and import
+const styles = theme => ({
     root: {
         flexGrow: 1,
         overflow: 'hidden',

@@ -93,6 +93,7 @@ const styles = theme => ({
     h5: {
         marginBottom: theme.spacing(2),
     },
+    root: {},
 });
 
 const Dashboard = props => {
