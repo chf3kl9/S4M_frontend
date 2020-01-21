@@ -8,7 +8,21 @@ import Rating from "@material-ui/lab/Rating";
 import Box from "@material-ui/core/Box";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteTwoToneIcon from "@material-ui/icons/DeleteTwoTone";
+import withStyles from "@material-ui/core/styles/withStyles";
+import {withRouter} from "react-router-dom";
 
+const styles = theme => ({
+    link: {
+        display: "block",
+        padding: 1,
+        color: "blue",
+        marginLeft:20,
+        cursor:"pointer",
+    },
+    comment:{
+        cursor:"pointer",
+    }
+});
 
 class ProfileScreen extends Component{
 
@@ -60,6 +74,7 @@ class ProfileScreen extends Component{
     }
 
     render() {
+        const {classes} = this.props;
         return (
             <div>
                 <h1>Profile page of '{this.state.user.email}'</h1>
@@ -68,9 +83,9 @@ class ProfileScreen extends Component{
                         <div>
                             <h2>Favorite movies:</h2>
                         </div>
-                        <ul className="list-group">
+                        <ul className={classes.link}>
                             {this.state.user.favorites.map(movie => (
-                                <li key={movie.id} className="list-group-item" onClick={() => this.toMovieDetails(movie.id)}>{movie.title}</li>
+                                <li key={movie.id} onClick={() => this.toMovieDetails(movie.id)}>{movie.title}</li>
                             ))}
                         </ul>
                     </div>
@@ -78,9 +93,9 @@ class ProfileScreen extends Component{
                         <div>
                             <h2>WatchList:</h2>
                         </div>
-                        <ul className="list-group">
+                        <ul className={classes.link}>
                             {this.state.user.watchedMovies.map(movie => (
-                                <li key={movie.id} className="list-group-item" onClick={() => this.toMovieDetails(movie.id)}>{movie.title}</li>
+                                <li key={movie.id} onClick={() => this.toMovieDetails(movie.id)}>{movie.title}</li>
                             ))}
                         </ul>
                     </div>
@@ -88,7 +103,7 @@ class ProfileScreen extends Component{
                         <div>
                             <h2>Rating:</h2>
                         </div>
-                        <ul className="list-group">
+                        <ul className={classes.link}>
                             {this.state.user.ratings.map(rating => (
                                 <Box key={rating.id} component="fieldset" mb={3} borderColor="transparent"
                                      onClick={() => this.toMovieDetails(rating.ratedMovie.id)}>
@@ -103,18 +118,27 @@ class ProfileScreen extends Component{
                     <h2>Comments:</h2>
                     {this.state.user.comments.map(comment => {
                         return (
-                            <Card key={comment.id} className="card" style={{maxWidth:'25%', marginTop: 10}}>
-                                <CardHeader
-                                    title={
-                                        <a onClick={() => this.toMovieDetails(comment.movie.id)}>{comment.movie.title}</a>
-                                    }
-                                    subheader={comment.date}
-                                    action={
-                                        <IconButton onClick={() => this.deleteComment(comment.id)}>
-                                            <DeleteTwoToneIcon />
-                                        </IconButton>
-                                    }
-                                />
+                            <Card key={comment.id} className="card" style={{maxWidth:'25%', marginTop: 10, cursor:"pointer"}}>
+                                {(this.props.isAdmin || this.state.user.email === this.props.email) ? (
+                                    <CardHeader
+                                        title={
+                                            <div onClick={() => this.toMovieDetails(comment.movie.id)}>{comment.movie.title}</div>
+                                        }
+                                        subheader={comment.date}
+                                        action={
+                                            <IconButton onClick={() => this.deleteComment(comment.id)}>
+                                                <DeleteTwoToneIcon />
+                                            </IconButton>
+                                        }
+                                    />
+                                ) : (
+                                    <CardHeader
+                                        title={
+                                            <div onClick={() => this.toMovieDetails(comment.movie.id)}>{comment.movie.title}</div>
+                                        }
+                                        subheader={comment.date}
+                                    />
+                                )}
                                 <CardContent>
                                     <Typography variant="body2" color="textSecondary" component="p">
                                         {comment.text}
@@ -128,4 +152,4 @@ class ProfileScreen extends Component{
     }
 }
 
-export default ProfileScreen;
+export default withRouter(withStyles(styles)(ProfileScreen));

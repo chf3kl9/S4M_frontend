@@ -23,9 +23,22 @@ const styles = theme => ({
         minWidth: 100,
     },
     paper: {
-        maxWidth: 400,
-        margin: `${theme.spacing(1)}px auto`,
+        width: 200,
+        margin: "2px",
         padding: theme.spacing(2),
+        cursor:"pointer",
+    },
+    sort: {
+        marginTop: "26px",
+        minWidth: 100,
+    },
+    filter: {
+        marginTop: "10px",
+        minWidth:100,
+    },
+    button: {
+        marginTop: "40px",
+        minWidth: 100,
     },
 });
 
@@ -58,7 +71,7 @@ class GenreScreen extends Component {
         const {classes} = this.props;
         return (
             <div className={classes.root}>
-                <FormControl className={classes.margin}>
+                <FormControl className={classes.sort}>
                     <InputLabel htmlFor="sort">Sort</InputLabel>
                     <Select
                         value={this.state.sort}
@@ -73,7 +86,7 @@ class GenreScreen extends Component {
                         <MenuItem value="za">Z-A</MenuItem>
                     </Select>
                 </FormControl> {/* Sorting selector */}
-                <FormControl className={classes.margin}>
+                <FormControl className={classes.filter}>
                     <TextField
                         id="Filter"
                         name="filter"

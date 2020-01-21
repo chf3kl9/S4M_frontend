@@ -91,7 +91,7 @@ class GenreEditScreen extends Component {
                     color="default"
                     className={classes.button}
                     onClick={() => this.discardChanges()}>
-                    Discard changes
+                    Return without save
                 </Button> {/* Discard changes button */}
                 <Button
                     variant="outlined"

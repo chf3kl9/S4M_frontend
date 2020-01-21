@@ -22,7 +22,14 @@ const styles = theme => ({
     },
     card: {
         maxWidth: '300'
-    }
+    },
+    link:{
+        display: "block",
+        padding: 1,
+        color: "blue",
+        marginLeft:20,
+        cursor:"pointer",
+    },
 });
 
 class MovieDetailScreen extends Component {
@@ -176,9 +183,8 @@ class MovieDetailScreen extends Component {
                         Edit
                     </Button>
                 )}
-                <img className={classes.img} alt="complex" src={this.state.movie.imageURL} />
-                <br/><br/>
-                Title: {this.state.movie.title}
+                <img className={classes.img} alt="Image not found" src={this.state.movie.imageURL} />
+                <h2>Title: {this.state.movie.title}</h2>
                 <FormControlLabel
                     control={
                         <Checkbox
@@ -202,13 +208,12 @@ class MovieDetailScreen extends Component {
                     label="In Watchlist"
                 />
                 <br/><br/>
-                Description: {this.state.movie.description}
-                <br/><br/>
-                Link: {this.state.movie.link}
-                <br/><br/>
-                Genres:
+                <h3>Description:</h3>
+                {this.state.movie.description}
                 <br/>
-                <ul>
+                <h3>Link: <a href={this.state.movie.link}>{this.state.movie.link}</a></h3>
+                <h3>Genres:</h3>
+                <ul className={classes.link}>
                     {this.state.movie.genres.map(genre => {
                         return <li key={genre.id} onClick={() => this.toGenreDetails(genre.id)}>{genre.name}</li>
                     })}
@@ -229,8 +234,7 @@ class MovieDetailScreen extends Component {
                     <Typography component="legend">Movie Rating by {this.state.rating.ratingCount} users:</Typography>
                     <Rating name="read-only" value={this.state.rating.totalRating} max={10} readOnly />
                 </Box>
-                Comments:
-                <br/>
+                <h3>Comments:</h3>
                     {this.state.movie.comments.map(comment => {
                         return (
                             <Card key={comment.id} style={{maxWidth:'25%', marginTop: 10}} onClick={() => this.toProfile(comment.user.email)}>
