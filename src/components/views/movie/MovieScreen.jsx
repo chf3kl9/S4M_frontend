@@ -23,14 +23,27 @@ const styles = theme => ({
         minWidth: 100,
     },
     paper: {
-        maxWidth: 300,
-        margin: `${theme.spacing(1)}px auto`,
+        width: 300,
+        margin: "2px",
         padding: theme.spacing(2),
+        cursor:"pointer"
     },
     img: {
         display: 'block',
         maxWidth: '100%',
         maxHeight: '100%',
+    },
+    sort: {
+        marginTop: "26px",
+        minWidth: 100,
+    },
+    filter: {
+        marginTop: "10px",
+        minWidth:100,
+    },
+    button: {
+        marginTop: "40px",
+        minWidth: 100,
     },
 });
 
@@ -63,7 +76,7 @@ class MovieScreen extends Component {
         const {classes} = this.props;
         return (
             <div className={classes.root}>
-                <FormControl className={classes.margin}>
+                <FormControl className={classes.sort}>
                     <InputLabel htmlFor="sort">Sort</InputLabel>
                     <Select
                         value={this.state.sort}
@@ -78,7 +91,7 @@ class MovieScreen extends Component {
                         <MenuItem value="za">Z-A</MenuItem>
                     </Select>
                 </FormControl> {/* Sorting selector */}
-                <FormControl className={classes.margin}>
+                <FormControl className={classes.filter}>
                     <TextField
                         id="Filter"
                         name="filter"
@@ -117,7 +130,7 @@ class MovieScreen extends Component {
                             }}>
                             <Grid container wrap="nowrap" spacing={2}>
                                 <Grid item xs zeroMinWidth>
-                                    <img className={classes.img} alt="complex" src={movie.imageURL} />
+                                    <img className={classes.img} alt="image not found" src={movie.imageURL} />
                                     <Typography noWrap>{movie.title}</Typography>
                                 </Grid>
                             </Grid>

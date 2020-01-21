@@ -20,8 +20,12 @@ import ApiCommunication from "../../apicalls/ApiCommunication";
 const styles = theme => ({
     img: {
         display: 'block',
+        minWidth: '25%',
         maxWidth: '25%',
-        maxHeight: '25%',
+    },
+    rowC:{
+        display:"flex",
+        flexDirection:"row",
     },
 });
 const ITEM_HEIGHT = 48;
@@ -132,7 +136,7 @@ class MovieEditScreen extends Component {
                     color="default"
                     className={classes.button}
                     onClick={() => this.discardChanges()}>
-                    Discard changes
+                    Return without save
                 </Button> {/* Discard changes button */}
                 <Button
                     variant="outlined"
@@ -162,9 +166,8 @@ class MovieEditScreen extends Component {
                         </Button>
                     </DialogActions>
                 </Dialog> {/* Delete Confirmation Dialog/Popup */}
-                <br/><br/>
-                <img className={classes.img} alt="complex" src={this.state.movie.imageURL}  />
-                <br/><br/>
+                    <div className={classes.rowC}>
+                        <div>
                 <TextField
                     id="standard"
                     name="imageURL"
@@ -209,8 +212,9 @@ class MovieEditScreen extends Component {
                 /> {/* Description multi line TextField */}
                 <br/>
                 <FormControl className={classes.formControl}>
-                    <InputLabel htmlFor="select-multiple-checkbox">Genres</InputLabel>
+                    <InputLabel htmlFor="select-multiple-checkbox">Genre</InputLabel>
                     <Select
+                        style={{minWidth:200}}
                         multiple
                         value={this.state.movie.genres}
                         onChange={this.handleChange}
@@ -230,6 +234,12 @@ class MovieEditScreen extends Component {
                         ))}
                     </Select>
                 </FormControl> {/* Genres multi checkbox select */}
+                        </div>
+                    <div>
+                        <img className={classes.img} alt="image not found" src={this.state.movie.imageURL}  />
+                    </div>
+                    </div>
+
             </div>
         );
     }

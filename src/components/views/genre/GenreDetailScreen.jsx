@@ -5,6 +5,13 @@ import Button from "@material-ui/core/Button";
 import ApiCommunication from "../../apicalls/ApiCommunication";
 
 const styles = theme => ({
+    link: {
+        display: "block",
+        padding: 1,
+        color: "blue",
+        marginLeft:20,
+        cursor:"pointer",
+    },
 });
 
 class GenreDetailScreen extends Component {
@@ -68,15 +75,13 @@ class GenreDetailScreen extends Component {
                         <br/><br/>
                     </>
                 )}
-                Name: {this.state.genre.name}
-                <br/><br/>
-                Movies with this genre:
-                <br/>
-                <div className="list-group">
+                <h2> Name: {this.state.genre.name}</h2>
+                <h3>Movies with this genre:</h3>
+                <ul className={classes.link}>
                     {this.state.genre.movies.map(movie => {
-                        return <div className="list-group-item" key={movie.id} onClick={() => this.toMovieDetails(movie.id)}>{movie.title}</div>
+                        return <li key={movie.id} onClick={() => this.toMovieDetails(movie.id)}>{movie.title}</li>
                     })}
-                </div>
+                </ul>
             </div>
         );
     }
